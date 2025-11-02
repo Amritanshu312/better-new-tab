@@ -51,10 +51,10 @@ const BackgroundSections = ({ setIsSettingsToggled }) => {
 
     toast.info("Downloading video... 🎬", { autoClose: 3000 });
     try {
-      await storeVideoFromUrl(inputURL.trim(), "myVideo");
-      toast.success("Video set successfully ✅", { autoClose: 2000 });
       setSelectedItem(null);
       setIsSettingsToggled(false)
+      await storeVideoFromUrl(inputURL.trim(), "myVideo");
+      toast.success("Video set successfully ✅", { autoClose: 2000 });
     } catch (err) {
       console.error(err);
       toast.error("Failed to set video ❌", { autoClose: 2500 });
