@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "Anime New Page",
+  "version": "1.0",
+  "description": "A clean and modern custom new tab with widgets and shortcuts.",
+  "author": "Amritanshu",
+  "chrome_url_overrides": {
+    "newtab": "index.html"
+  },
+  "permissions": [
+    "storage",
+    "tabs",
+    "topSites"
+  ],
+  "icons": {
+    "16": "ex_icon/icon16.png",
+    "32": "ex_icon/icon32.png",
+    "48": "ex_icon/icon48.png",
+    "128": "ex_icon/icon128.png"
+  },
+  "action": {
+    "default_icon": {
+      "16": "ex_icon/icon16.png",
+      "32": "ex_icon/icon32.png",
+      "48": "ex_icon/icon48.png"
+    },
+    "default_title": "Anime New Tab"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
+}
