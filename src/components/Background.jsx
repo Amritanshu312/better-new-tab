@@ -1,7 +1,16 @@
+import { useGeneralSettings } from "../context/GeneralSettings";
 import { useVideo } from "../context/VideoContext";
 
 const Background = () => {
-  const { videoURL } = useVideo();
+  const { videoURL, loadingVideo } = useVideo();
+  const { settings } = useGeneralSettings()
+
+  if (loadingVideo) {
+    return (
+      <div className="w-full h-screen flex items-center justify-center bg-[#000000] text-white"></div>
+    );
+  }
+
 
   return (
     <div className="relative">
@@ -13,7 +22,8 @@ const Background = () => {
         loop
       ></video>
 
-      <div className="bg-[#0000007e] w-full h-full fixed top-0 left-0"></div>
+      {settings.showBackground ? <div className="bg-[#000000] w-full h-full fixed top-0 left-0" style={{ opacity: `${settings.wallpaperDimming}%` }}></div> : null}
+      {/* {showBackground ? <div className="bg-[#0000007e] w-full h-full fixed top-0 left-0"></div> : null} */}
     </div>
   );
 };

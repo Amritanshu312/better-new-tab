@@ -3,10 +3,12 @@ import { Rnd } from "react-rnd";
 import { Lock, Unlock, X, FileText } from "lucide-react";
 import { get, set, del, keys } from "idb-keyval";
 import clsx from "clsx";
+import { useGeneralSettings } from "../context/GeneralSettings";
 
 const Images_dumper = ({ locked, setLocked }) => {
   const [files, setFiles] = useState([]);
   const [zIndexOrder, setZIndexOrder] = useState(1);
+  const { settings } = useGeneralSettings()
 
   // 🧠 Load locked state
   useEffect(() => {
@@ -263,7 +265,7 @@ const Images_dumper = ({ locked, setLocked }) => {
           }
           style={{
             zIndex: file.zIndex,
-            border: file.type === "pdf" ? "1px solid #ffffff24" : "2px solid #555",
+            border: settings.showBorder ? (file.type === "pdf" ? "1px solid #ffffff24" : "2px solid #555") : "none",
             borderRadius: "12px",
             overflow: "hidden",
             opacity: file.type === "image" ? file.opacity : 1,
@@ -340,7 +342,7 @@ const Images_dumper = ({ locked, setLocked }) => {
         <button
           onClick={toggleLock}
           className={clsx(
-            "flex h-12 w-12 items-center justify-center text-white opacity-0 hover:opacity-100 bg-[#4e4d4e2e] rounded-xl hover:bg-[#5f5f5f50] transition-all",
+            "flex h-12 z-40 w-12 items-center justify-center text-white opacity-0 hover:opacity-100 bg-[#4e4d4e2e] rounded-xl hover:bg-[#5f5f5f50] transition-all",
             {
               "opacity-100": !locked,
             }

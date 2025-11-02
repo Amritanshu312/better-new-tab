@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useVideo } from "../../context/VideoContext";
 import { toast } from "react-toastify";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Button } from "@headlessui/react";
 
 const VideoQualityPopup = ({ selectedItem, onClose, onSelectQuality }) => {
   if (!selectedItem) return null;
@@ -13,12 +14,12 @@ const VideoQualityPopup = ({ selectedItem, onClose, onSelectQuality }) => {
           Choose Video Quality
         </h2>
         <div className="flex justify-around">
-          <button
+          <Button
             onClick={() => onSelectQuality("HD")}
             className="px-6 py-2 text-sm bg-[#111111b3] border border-[#ffffff1b] rounded-md hover:bg-[#1818188b] transition"
           >
             HD
-          </button>
+          </Button>
           <button
             onClick={() => onSelectQuality("4K")}
             className="px-6 text-sm bg-[#111111b3] border border-[#ffffff1b] rounded-md hover:bg-[#1818188b] transition"
@@ -178,7 +179,7 @@ const BackgroundSections = ({ setIsSettingsToggled }) => {
           {data.map((item, i) => (
             <div
               key={i}
-              className="cursor-pointer transition-transform hover:scale-[1.02]"
+              className="cursor-pointer transition-transform hover:scale-[1.02] bg-[#43444531] aspect-video"
               onClick={() => setSelectedItem(item)}
             >
               <img

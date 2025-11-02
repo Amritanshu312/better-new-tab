@@ -4,11 +4,14 @@ import './index.css'
 import App from './App.jsx'
 import VideoOfflinePlayer from './test.jsx'
 import { VideoProvider } from './context/VideoContext.jsx'
+import { GeneralSettingsProvider } from './context/GeneralSettings'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <VideoProvider>
-      <App />
+      <GeneralSettingsProvider >
+        <App />
+      </GeneralSettingsProvider>
     </VideoProvider>
     {/* <VideoOfflinePlayer /> */}
   </StrictMode>,

@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Maximize2, Minimize2 } from "lucide-react";
 import { useState } from "react";
 import BackgroundSections from "./BackgroundSections";
+import GeneralSection from "./GeneralSection";
 
 /* ---------- Sidebar Component ---------- */
 const SettingsSidebar = ({ tabs, activeTab, setActiveTab }) => {
@@ -27,7 +28,8 @@ const SettingsSidebar = ({ tabs, activeTab, setActiveTab }) => {
 const SettingsContent = ({ activeTab, setIsSettingsToggled }) => {
   return (
     <div className="flex-1 p-6 overflow-y-auto no-scrollbar">
-      {activeTab === "Background" ? <BackgroundSections setIsSettingsToggled={setIsSettingsToggled} /> : null
+      {activeTab === "Wallpaper" ? <BackgroundSections setIsSettingsToggled={setIsSettingsToggled} /> :
+        activeTab === "General" ? <GeneralSection /> : null
       }
     </div>
   );
@@ -36,10 +38,11 @@ const SettingsContent = ({ activeTab, setIsSettingsToggled }) => {
 /* ---------- Main Popup Component ---------- */
 const SettingsPopUp = ({ isSettingsToggled, setIsSettingsToggled }) => {
   const [isMaximized, setIsMaximized] = useState(false);
-  const [activeTab, setActiveTab] = useState("Background");
+  const [activeTab, setActiveTab] = useState("General");
 
   const tabs = [
-    "Background",
+    "General",
+    "Wallpaper"
   ];
 
   return (

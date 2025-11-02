@@ -5,6 +5,7 @@ const VideoContext = createContext();
 export const VideoProvider = ({ children }) => {
   const [videoURL, setVideoURL] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [loadingVideo, setLoadingVideo] = useState(true); // 👈 new flag
 
   // ---- IndexedDB Setup ----
   const getDB = () =>
@@ -43,13 +44,14 @@ export const VideoProvider = ({ children }) => {
 
     tx.oncomplete = () => {
       console.log("✅ Stored video:", keyName);
-      loadVideoFromIndexedDB(keyName); // update context immediately
+      loadVideoFromIndexedDB(keyName);
       setLoading(false);
     };
   };
 
   // ---- Load Video ----
   const loadVideoFromIndexedDB = async (keyName = "myVideo") => {
+    setLoadingVideo(true); // 👈 start loading
     const db = await getDB();
     const tx = db.transaction("videos", "readonly");
     const request = tx.objectStore("videos").get(keyName);
@@ -59,32 +61,31 @@ export const VideoProvider = ({ children }) => {
       if (!blob) {
         console.log("⚠️ No video found");
         setVideoURL(null);
-        return;
+      } else {
+        const url = URL.createObjectURL(blob);
+        setVideoURL(url);
       }
-      const url = URL.createObjectURL(blob);
-      setVideoURL(url);
+      setLoadingVideo(false); // 👈 done
+    };
+
+    request.onerror = () => {
+      console.error("❌ Failed to load video:", request.error);
+      setLoadingVideo(false);
     };
   };
 
-  // ---- Delete Video ----
   const deleteVideoFromIndexedDB = async (keyName = "myVideo") => {
     const db = await getDB();
     const tx = db.transaction("videos", "readwrite");
     const store = tx.objectStore("videos");
-
     const request = store.delete(keyName);
 
     request.onsuccess = () => {
       console.log("🗑️ Deleted video:", keyName);
       setVideoURL(null);
     };
-
-    request.onerror = () => {
-      console.error("❌ Failed to delete video:", request.error);
-    };
   };
 
-  // ---- Auto-load once ----
   useEffect(() => {
     loadVideoFromIndexedDB("myVideo");
   }, []);
@@ -94,6 +95,7 @@ export const VideoProvider = ({ children }) => {
       value={{
         videoURL,
         loading,
+        loadingVideo,
         storeVideoFromUrl,
         loadVideoFromIndexedDB,
         deleteVideoFromIndexedDB,

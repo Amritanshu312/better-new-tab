@@ -1,5 +1,5 @@
 import { useState } from "react"
-import SettingsIcon from "./SettingsIcon"
+import SettingsIcon from "../appicons/SettingsIcon"
 import SettingsPopUp from "./SettingsPopUp"
 
 const Settings = ({ locked }) => {
