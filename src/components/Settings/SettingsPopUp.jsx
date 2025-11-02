@@ -40,9 +40,6 @@ const SettingsPopUp = ({ isSettingsToggled, setIsSettingsToggled }) => {
 
   const tabs = [
     "Background",
-    "Search",
-    "Top Sites",
-    "Brave News",
   ];
 
   return (
