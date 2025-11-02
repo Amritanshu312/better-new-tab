@@ -271,7 +271,7 @@ const Images_dumper = ({ locked, setLocked }) => {
           }}
         >
           <div className="relative w-full h-full flex items-center justify-center text-white">
-            {file.type === "image" ? (
+            {file.type !== "pdf" ? (
               <>
                 <img
                   src={file.src}

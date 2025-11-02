@@ -25,3 +25,18 @@
   font-style: normal;
   font-display: swap;
 }
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+.Toastify__toast-theme--dark {
+  background: #32304387 !important;
+  backdrop-filter: blur(16px) !important;
+}

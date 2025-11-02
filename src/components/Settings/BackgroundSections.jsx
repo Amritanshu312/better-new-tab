@@ -72,10 +72,6 @@ const BackgroundSections = ({ setIsSettingsToggled }) => {
     }
   };
 
-  const closePopup = () => {
-    setSelectedItem(null)
-    setIsSettingsToggled(false)
-  }
 
   // Debounce search input (wait 500ms after user stops typing)
   useEffect(() => {
@@ -99,7 +95,7 @@ const BackgroundSections = ({ setIsSettingsToggled }) => {
             ? `https://new-tab-ebon.vercel.app/api/search?q=${encodeURIComponent(
               searchQuery
             )}`
-            : `https://new-tab-ebon.vercel.app/api/wallpapers?page=${page}&limit=41`;
+            : `https://new-tab-ebon.vercel.app/api/wallpapers?page=${page}&limit=53`;
 
         const res = await fetch(url);
         if (res.ok) {
@@ -127,12 +123,12 @@ const BackgroundSections = ({ setIsSettingsToggled }) => {
       {/* Popup Modal */}
       <VideoQualityPopup
         selectedItem={selectedItem}
-        onClose={closePopup}
+        onClose={() => setSelectedItem(null)}
         onSelectQuality={handleSelectQuality}
       />
 
       {/* Search + Next */}
-      <div className="w-full h-8 mb-2 flex gap-2">
+      <div className="w-full h-8 mb-2 flex gap-2 ">
         <input
           type="text"
           value={searchQuery}
@@ -166,7 +162,7 @@ const BackgroundSections = ({ setIsSettingsToggled }) => {
           Loading wallpapers...
         </div>
       ) : (
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-2 mb-[40px]">
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-2 mb-[40px] ">
           <button
             onClick={async () => {
               toast.info("Deleting stored video…");
