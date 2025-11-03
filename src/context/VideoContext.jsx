@@ -2,10 +2,46 @@ import { createContext, useContext, useState, useEffect } from "react";
 
 const VideoContext = createContext();
 
+/* 🧠 Preload IndexedDB data before React mounts */
+let preloadedVideoURL = null;
+
+const preloadVideoFromIndexedDB = async (keyName = "myVideo") => {
+  return new Promise((resolve) => {
+    const request = indexedDB.open("VideoDB", 1);
+    request.onupgradeneeded = () => {
+      const db = request.result;
+      if (!db.objectStoreNames.contains("videos")) {
+        db.createObjectStore("videos");
+      }
+    };
+    request.onsuccess = () => {
+      const db = request.result;
+      const tx = db.transaction("videos", "readonly");
+      const store = tx.objectStore("videos");
+      const getReq = store.get(keyName);
+
+      getReq.onsuccess = () => {
+        const blob = getReq.result;
+        if (blob) {
+          const url = URL.createObjectURL(blob);
+          preloadedVideoURL = url;
+          resolve(url);
+        } else {
+          resolve(null);
+        }
+      };
+      getReq.onerror = () => resolve(null);
+    };
+  });
+};
+
+// 🚀 Immediately preload video when this file is imported (before React runs)
+preloadVideoFromIndexedDB();
+
 export const VideoProvider = ({ children }) => {
-  const [videoURL, setVideoURL] = useState(null);
+  const [videoURL, setVideoURL] = useState(preloadedVideoURL);
   const [loading, setLoading] = useState(false);
-  const [loadingVideo, setLoadingVideo] = useState(true); // 👈 new flag
+  const [loadingVideo, setLoadingVideo] = useState(!preloadedVideoURL);
 
   // ---- IndexedDB Setup ----
   const getDB = () =>
@@ -51,7 +87,7 @@ export const VideoProvider = ({ children }) => {
 
   // ---- Load Video ----
   const loadVideoFromIndexedDB = async (keyName = "myVideo") => {
-    setLoadingVideo(true); // 👈 start loading
+    setLoadingVideo(true);
     const db = await getDB();
     const tx = db.transaction("videos", "readonly");
     const request = tx.objectStore("videos").get(keyName);
@@ -65,7 +101,7 @@ export const VideoProvider = ({ children }) => {
         const url = URL.createObjectURL(blob);
         setVideoURL(url);
       }
-      setLoadingVideo(false); // 👈 done
+      setLoadingVideo(false);
     };
 
     request.onerror = () => {
@@ -86,8 +122,11 @@ export const VideoProvider = ({ children }) => {
     };
   };
 
+  // 🪄 If nothing was preloaded, ensure it loads on mount
   useEffect(() => {
-    loadVideoFromIndexedDB("myVideo");
+    if (!preloadedVideoURL) {
+      loadVideoFromIndexedDB("myVideo");
+    }
   }, []);
 
   return (

@@ -31,6 +31,7 @@ const Background = () => {
         muted
         autoPlay
         loop
+        preload="auto"
       ></video>
 
       {settings.showBackground && (
