@@ -2,8 +2,18 @@ import React, { useEffect, useState, useRef, useCallback } from "react";
 import { Rnd } from "react-rnd";
 import { CalendarDays, Settings2 } from "lucide-react";
 import clsx from "clsx";
+import { useGeneralSettings } from "../context/GeneralSettings";
 
 export default function TimeDateCard({ isCustomizationState }) {
+  const { settings } = useGeneralSettings()
+
+  const [visible, setVisible] = useState(settings?.showTimeDate ?? false);
+
+  // ✅ React to changes in settings.showTimeDate
+  useEffect(() => {
+    setVisible(!!settings?.showTimeDate);
+  }, [settings?.showTimeDate]);
+
   const [time, setTime] = useState(() =>
     new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
   );
@@ -55,25 +65,36 @@ export default function TimeDateCard({ isCustomizationState }) {
 
   // 🕒 Efficient time updater (once per minute)
   useEffect(() => {
+    if (!visible) return;
+
+    console.log("Time updater started");
+
     const updateTime = () => {
       const now = new Date();
+
       const newTime = now.toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
       });
-      if (newTime !== time) setTime(newTime);
+      setTime((prev) => (prev !== newTime ? newTime : prev));
 
       const newDate = now.toLocaleDateString("en-GB", {
         weekday: "long",
         day: "numeric",
         month: "long",
       });
-      if (newDate !== date) setDate(newDate);
+      setDate((prev) => (prev !== newDate ? newDate : prev));
     };
-    updateTime();
-    const interval = setInterval(updateTime, 60000);
-    return () => clearInterval(interval);
-  }, [time, date]);
+
+    updateTime(); // update immediately once
+    const interval = setInterval(updateTime, 60000); // update every 1 minute
+
+    return () => {
+      clearInterval(interval);
+      console.log("Time updater stopped");
+    };
+  }, [visible]);
+
 
   // 💾 Debounced saves
   const debounceSave = (key) => {
@@ -102,6 +123,7 @@ export default function TimeDateCard({ isCustomizationState }) {
       position={position}
       onDragStop={(e, d) => setPosition({ x: d.x, y: d.y })}
       className="z-20"
+      style={{ display: visible ? "block" : "none" }}
     >
       <div
         className={clsx(

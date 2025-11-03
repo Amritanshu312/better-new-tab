@@ -93,7 +93,7 @@ const GeneralSection = () => {
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-sm font-medium">Hide Lock Icon</h3>
-          <p className="text-xs text-gray-400">Enable To Hide Lock Screen when State is locked, Disable to show lock icon even when state is locked.</p>
+          <p className="text-xs text-gray-400">Enable To Hide Lock Icon When Editing State Is Locked, Disable To Show Lock Icon even when Editing State is locked.</p>
         </div>
         <Switch
           checked={settings.hide_lock_icon}
@@ -103,6 +103,25 @@ const GeneralSection = () => {
         >
           <span
             className={`${settings.hide_lock_icon ? "translate-x-6" : "translate-x-1"
+              } inline-block h-4 w-4 transform rounded-full bg-white transition`}
+          />
+        </Switch>
+      </div>
+
+      {/* Toggle lock icon hide or show when state is locked*/}
+      <div className="flex items-center justify-between">
+        <div>
+          <h3 className="text-sm font-medium">Hide Time and Date</h3>
+          <p className="text-xs text-gray-400">Enable or Disable To Hide Time And Date Card From Home Page.</p>
+        </div>
+        <Switch
+          checked={!settings.showTimeDate}
+          onChange={() => toggleSetting("showTimeDate")}
+          className={`${!settings.showTimeDate ? "bg-blue-600" : "bg-gray-600"
+            } relative inline-flex h-6 w-11 items-center rounded-full transition`}
+        >
+          <span
+            className={`${!settings.showTimeDate ? "translate-x-6" : "translate-x-1"
               } inline-block h-4 w-4 transform rounded-full bg-white transition`}
           />
         </Switch>
