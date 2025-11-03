@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Rnd } from "react-rnd";
-import { useGeneralSettings } from "../context/GeneralSettings";
-import SearchBar from "../utils/Search";
+import { useGeneralSettings } from "../../context/GeneralSettings";
+import SearchBar from "../Search";
 import { Plus, X } from "lucide-react";
-
+import { motion } from "framer-motion"
 /* 🧠 IndexedDB Helpers */
 const openDB = async () => {
   return new Promise((resolve, reject) => {
@@ -255,8 +255,17 @@ export default function AppBars({ isCustomizationState }) {
 
       {/* 🪟 Modal for Adding New Site */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 backdrop-blur-sm">
-          <div className="bg-[#1f1f1fdc] backdrop-blur-[6px] border border-[#ffffff20] rounded-xl shadow-2xl text-white font-['poppins'] overflow-hidden max-w-md w-full px-4 py-4">
+        <motion.div initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }} className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 backdrop-blur-sm">
+          <motion.div
+            layout
+            transition={{ type: "spring", stiffness: 130, damping: 15 }}
+            initial={{ opacity: 0, scale: 0.9, y: -20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: -20 }}
+            className="bg-[#1f1f1fdc] backdrop-blur-[6px] border border-[#ffffff20] rounded-xl shadow-2xl text-white font-['poppins'] overflow-hidden max-w-md w-full px-4 py-4">
             <h2 className="text-lg font-semibold mb-4">Add a New Website</h2>
 
             <div className="flex flex-col space-y-3">
@@ -291,8 +300,8 @@ export default function AppBars({ isCustomizationState }) {
                 </button>
               </div>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       )}
 
       {settings.global_search ? <SearchBar /> : null}

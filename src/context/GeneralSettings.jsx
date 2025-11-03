@@ -9,6 +9,7 @@ export const GeneralSettingsProvider = ({ children }) => {
     showBorder: true,
     showAppbar: true,
     showTimeDate: true,
+    showTodoList: false,
     global_search: false,
     hide_lock_icon: true,
     wallpaperDimming: 32,

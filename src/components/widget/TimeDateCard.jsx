@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, useCallback } from "react";
 import { Rnd } from "react-rnd";
 import { CalendarDays, Settings2 } from "lucide-react";
 import clsx from "clsx";
-import { useGeneralSettings } from "../context/GeneralSettings";
+import { useGeneralSettings } from "../../context/GeneralSettings";
 
 export default function TimeDateCard({ isCustomizationState }) {
   const { settings } = useGeneralSettings()
