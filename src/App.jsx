@@ -7,6 +7,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CustomizationIcon from "./components/appicons/CustomizationIcon";
 import LockIcon from "./components/appicons/LockIcon";
+import TimeDateCard from "./components/TimeDateCard";
 
 function App() {
   const [locked, setLocked] = useState(true);
@@ -17,6 +18,7 @@ function App() {
       <Background />
       <div className="h-screen w-full bg-cover bg-center flex flex-col items-center justify-start p-6">
         <AppBars isCustomizationState={isCustomizationState} />
+        <TimeDateCard isCustomizationState={isCustomizationState} />
         <Images_Pdf_dumper locked={locked} setLocked={setLocked} />
         <Settings locked={locked} />
         <CustomizationIcon

@@ -8,6 +8,8 @@ export const GeneralSettingsProvider = ({ children }) => {
     showBackground: true,
     showBorder: true,
     showAppbar: true,
+    global_search: false,
+    hide_lock_icon: true,
     wallpaperDimming: 32,
     theme: "dark",
     accentColor: "#3b82f6",

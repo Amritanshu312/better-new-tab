@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Rnd } from "react-rnd";
 import { useGeneralSettings } from "../context/GeneralSettings";
+import SearchBar from "../utils/Search";
 
 export default function AppBars({ isCustomizationState }) {
   const { settings } = useGeneralSettings();
@@ -52,46 +53,51 @@ export default function AppBars({ isCustomizationState }) {
   ];
 
   return (
-    <Rnd
-      bounds="window"
-      size="auto"
-      position={position}
-      onDragStop={(e, d) => {
-        if (isCustomizationState) {
-          setPosition({ x: d.x, y: d.y });
-        }
-      }}
-      enableResizing={false}
-      disableDragging={!isCustomizationState}
-      className="z-20"
-    >
-      <div ref={containerRef} className="relative">
-        {settings.showAppbar && (
-          <div className="flex space-x-6 bg-black/10 rounded-2xl p-4 backdrop-blur-md">
-            {apps.map((app, index) => (
-              <a
-                href={app.link}
-                key={index}
-                className="flex flex-col items-center space-y-2"
-              >
-                <div className="bg-[#e5e7eb50] hover:bg-[#e5e7eb69] cursor-pointer p-3 rounded-2xl shadow-md transition">
-                  <img src={app.icon} alt={app.name} className="w-8 h-8" />
-                </div>
-                <p className="text-white text-sm font-medium">{app.name}</p>
-              </a>
-            ))}
-          </div>
-        )}
+    <>
 
-        {isCustomizationState && (
-          <button
-            onClick={handleReset}
-            className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-white bg-[#1a1a1a52] backdrop-blur-lg hover:bg-[#1a1a1a7c] border border-[#ffffff0c] px-3 py-1 rounded-lg text-sm shadow-md transition"
-          >
-            Reset Position
-          </button>
-        )}
-      </div>
-    </Rnd>
+      <Rnd
+        bounds="window"
+        size="auto"
+        position={position}
+        onDragStop={(e, d) => {
+          if (isCustomizationState) {
+            setPosition({ x: d.x, y: d.y });
+          }
+        }}
+        enableResizing={false}
+        disableDragging={!isCustomizationState}
+        className="z-20"
+      >
+        <div ref={containerRef} className="relative">
+          {settings.showAppbar && (
+            <div className="flex space-x-6 bg-black/10 rounded-2xl p-4 backdrop-blur-md">
+              {apps.map((app, index) => (
+                <a
+                  href={app.link}
+                  key={index}
+                  className="flex flex-col items-center space-y-2"
+                >
+                  <div className="bg-[#e5e7eb50] hover:bg-[#e5e7eb69] cursor-pointer p-3 rounded-2xl shadow-md transition">
+                    <img src={app.icon} alt={app.name} className="w-8 h-8" />
+                  </div>
+                  <p className="text-white text-sm font-medium">{app.name}</p>
+                </a>
+              ))}
+            </div>
+          )}
+
+          {isCustomizationState && (
+            <button
+              onClick={handleReset}
+              className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-white bg-[#1a1a1a52] backdrop-blur-lg hover:bg-[#1a1a1a7c] border border-[#ffffff0c] px-3 py-1 rounded-lg text-sm shadow-md transition"
+            >
+              Reset Position
+            </button>
+          )}
+        </div>
+      </Rnd>
+
+      {settings.global_search ? <SearchBar /> : null}
+    </>
   );
 }

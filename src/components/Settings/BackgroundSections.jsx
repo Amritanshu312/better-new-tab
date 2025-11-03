@@ -38,6 +38,41 @@ const VideoQualityPopup = ({ selectedItem, onClose, onSelectQuality }) => {
   );
 };
 
+
+
+const encodeData = (data) => {
+  try {
+    const str = JSON.stringify(data);
+    const xorKey = 123;
+
+    // Encode UTF-8 string safely
+    const utf8Bytes = new TextEncoder().encode(str);
+    const xorBytes = utf8Bytes.map((b) => b ^ xorKey);
+    const base64 = btoa(String.fromCharCode(...xorBytes));
+
+    return base64;
+  } catch (err) {
+    console.error("Encoding error:", err);
+    return null;
+  }
+};
+
+const decodeData = (encoded) => {
+  try {
+    const xorKey = 123;
+
+    const binaryStr = atob(encoded);
+    const bytes = Uint8Array.from(binaryStr, (c) => c.charCodeAt(0) ^ xorKey);
+    const decodedStr = new TextDecoder().decode(bytes);
+
+    return JSON.parse(decodedStr);
+  } catch (err) {
+    console.error("Decoding error:", err);
+    return null;
+  }
+};
+
+
 const BackgroundSections = ({ setIsSettingsToggled }) => {
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1);
@@ -49,11 +84,10 @@ const BackgroundSections = ({ setIsSettingsToggled }) => {
 
   const handleStoreVideo = async (inputURL) => {
     if (!inputURL?.trim()) return;
-
     toast.info("Downloading video... 🎬", { autoClose: 3000 });
     try {
       setSelectedItem(null);
-      setIsSettingsToggled(false)
+      setIsSettingsToggled(false);
       await storeVideoFromUrl(inputURL.trim(), "myVideo");
       toast.success("Video set successfully ✅", { autoClose: 2000 });
     } catch (err) {
@@ -66,42 +100,65 @@ const BackgroundSections = ({ setIsSettingsToggled }) => {
     const selectedDownload = selectedItem?.downloads?.find(
       (d) => d.quality === quality
     );
-    if (selectedDownload?.url) {
-      handleStoreVideo(selectedDownload.url);
-    } else {
-      toast.error(`${quality} version not available ❌`);
-    }
+    if (selectedDownload?.url) handleStoreVideo(selectedDownload.url);
+    else toast.error(`${quality} version not available ❌`);
   };
 
-
-  // Debounce search input (wait 500ms after user stops typing)
-  useEffect(() => {
-    const delayDebounce = setTimeout(() => {
-      if (searchQuery.trim()) {
-        fetchData("search");
-      } else {
-        fetchData("wallpapers");
-      }
-    }, 500);
-
-    return () => clearTimeout(delayDebounce);
-  }, [searchQuery]);
-
+  // 🔥 Optimized caching (wallpapers only, page ≤ 3)
   const fetchData = useCallback(
     async (type = "wallpapers") => {
+      // Don't cache search
+      if (type === "search") {
+        setLoadingData(true);
+        try {
+          const url = `https://new-tab-ebon.vercel.app/api/search?q=${encodeURIComponent(
+            searchQuery
+          )}`;
+          const res = await fetch(url);
+          if (res.ok) {
+            const json = await res.json();
+            setData(json?.results || []);
+          } else toast.error("Failed to load wallpapers ❌");
+        } catch (err) {
+          console.error(err);
+          toast.error("Network error while fetching data ❌");
+        } finally {
+          setLoadingData(false);
+        }
+        return;
+      }
+
       setLoadingData(true);
       try {
-        const url =
-          type === "search"
-            ? `https://new-tab-ebon.vercel.app/api/search?q=${encodeURIComponent(
-              searchQuery
-            )}`
-            : `https://new-tab-ebon.vercel.app/api/wallpapers?page=${page}&limit=53`;
+        const cacheRaw = localStorage.getItem("cache_wallpapers");
+        const cache = cacheRaw ? decodeData(cacheRaw) : { pages: {}, timestamp: 0 };
+        const isExpired = Date.now() - cache.timestamp > 60 * 1000 * 60 * 24 * 10;
 
+        // 🧠 Try cached data first if valid and within page 1–3
+        if (!isExpired && cache.pages[page]) {
+          setData(cache.pages[page]);
+          setLoadingData(false);
+          return;
+        }
+
+        // 🌐 Otherwise fetch new wallpapers
+        const url = `https://new-tab-ebon.vercel.app/api/wallpapers?page=${page}&limit=53`;
         const res = await fetch(url);
         if (res.ok) {
-          const data = await res.json();
-          setData(data?.results || []);
+          const json = await res.json();
+          const results = json?.results?.slice(0, 53) || [];
+
+          // 🧩 Only cache pages 1–3
+          if (page <= 3) {
+            const updatedCache = {
+              pages: { ...cache.pages, [page]: results },
+              timestamp: Date.now(),
+            };
+            const encoded = encodeData(updatedCache);
+            if (encoded) localStorage.setItem("cache_wallpapers", encoded);
+          }
+
+          setData(results);
         } else {
           toast.error("Failed to load wallpapers ❌");
         }
@@ -115,9 +172,19 @@ const BackgroundSections = ({ setIsSettingsToggled }) => {
     [page, searchQuery]
   );
 
+  // 🧭 Auto fetch on page change
   useEffect(() => {
     fetchData("wallpapers");
   }, [page]);
+
+  // 🔍 Debounced search (no cache)
+  useEffect(() => {
+    const delay = setTimeout(() => {
+      if (searchQuery.trim()) fetchData("search");
+      else fetchData("wallpapers");
+    }, 500);
+    return () => clearTimeout(delay);
+  }, [searchQuery]);
 
   return (
     <div className="relative">
@@ -128,8 +195,8 @@ const BackgroundSections = ({ setIsSettingsToggled }) => {
         onSelectQuality={handleSelectQuality}
       />
 
-      {/* Search + Next */}
-      <div className="w-full h-8 mb-2 flex gap-2 ">
+      {/* Search + Page Nav */}
+      <div className="w-full h-8 mb-2 flex gap-2">
         <input
           type="text"
           value={searchQuery}
@@ -138,16 +205,20 @@ const BackgroundSections = ({ setIsSettingsToggled }) => {
           placeholder="Search wallpapers..."
         />
         <div
-          className={`flex gap-1 items-center border border-[#ffffff18] rounded-md px-5 bg-[#2e30374d] cursor-pointer transition ${loadingData ? "opacity-50 cursor-not-allowed" : "hover:bg-[#393b45]"
+          className={`flex gap-1 items-center border border-[#ffffff18] rounded-md px-5 bg-[#2e30374d] cursor-pointer transition ${loadingData
+            ? "opacity-50 cursor-not-allowed"
+            : "hover:bg-[#393b45]"
             }`}
           onClick={() => {
-            if (!loadingData) setPage((prev) => prev > 1 ? prev - 1 : prev);
+            if (!loadingData) setPage((prev) => (prev > 1 ? prev - 1 : prev));
           }}
         >
           {loadingData ? "Loading..." : <><ChevronLeft size={18} /> Prev</>}
         </div>
         <div
-          className={`flex gap-1 items-center border border-[#ffffff18] rounded-md px-5 bg-[#2e30374d] cursor-pointer transition ${loadingData ? "opacity-50 cursor-not-allowed" : "hover:bg-[#393b45]"
+          className={`flex gap-1 items-center border border-[#ffffff18] rounded-md px-5 bg-[#2e30374d] cursor-pointer transition ${loadingData
+            ? "opacity-50 cursor-not-allowed"
+            : "hover:bg-[#393b45]"
             }`}
           onClick={() => {
             if (!loadingData) setPage((prev) => prev + 1);
@@ -163,7 +234,7 @@ const BackgroundSections = ({ setIsSettingsToggled }) => {
           Loading wallpapers...
         </div>
       ) : (
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-2 mb-[40px] ">
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-2 mb-[40px]">
           <button
             onClick={async () => {
               toast.info("Deleting stored video…");
