@@ -5,6 +5,7 @@ import { Plus, Trash2, Check } from "lucide-react";
 const TodoList = ({
   locked
 }) => {
+  const defaultSize = { width: 320, height: 420 };
 
   /* 🎯 Helper: calculate centered position */
   const calculateCenter = () => {

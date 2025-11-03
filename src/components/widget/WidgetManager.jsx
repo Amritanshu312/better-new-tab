@@ -13,7 +13,7 @@ const WidgetManager = ({
     <>
       <AppBars isCustomizationState={isCustomizationState} />
       <TimeDateCard isCustomizationState={isCustomizationState} />
-      {settings.showTodoList && <TodoList locked={locked} />}
+      {settings.showTodoList ? <TodoList locked={locked} /> : null}
     </>
   )
 }
