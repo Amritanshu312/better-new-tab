@@ -5,7 +5,7 @@ import { get, set, del, keys } from "idb-keyval";
 import clsx from "clsx";
 import { useGeneralSettings } from "../context/GeneralSettings";
 
-const Images_dumper = ({ locked, setLocked }) => {
+const Images_Pdf_dumper = ({ locked, setLocked }) => {
   const [files, setFiles] = useState([]);
   const [zIndexOrder, setZIndexOrder] = useState(1);
   const { settings } = useGeneralSettings()
@@ -165,14 +165,6 @@ const Images_dumper = ({ locked, setLocked }) => {
     },
     [zIndexOrder, updateFile]
   );
-
-  const toggleLock = useCallback(() => {
-    setLocked((prev) => {
-      const newState = !prev;
-      localStorage.setItem("is_image_locked", newState);
-      return newState;
-    });
-  }, []);
 
   const handleOpacityChange = useCallback(
     (id, value) => updateFile(id, { opacity: parseFloat(value) }),
@@ -337,22 +329,9 @@ const Images_dumper = ({ locked, setLocked }) => {
         </Rnd>
       ))}
 
-      {/* 🔒 Lock / Unlock Button */}
-      <div className="absolute bottom-4 right-4 flex items-center gap-4 z-50">
-        <button
-          onClick={toggleLock}
-          className={clsx(
-            "flex h-12  w-12 items-center justify-center text-white opacity-0 hover:opacity-100 bg-[#4e4d4e2e] rounded-xl hover:bg-[#5f5f5f50] transition-all",
-            {
-              "opacity-100": !locked,
-            }
-          )}
-        >
-          {locked ? <Lock size={18} /> : <Unlock size={18} />}
-        </button>
-      </div>
+
     </div>
   );
 };
 
-export default Images_dumper;
+export default Images_Pdf_dumper;
