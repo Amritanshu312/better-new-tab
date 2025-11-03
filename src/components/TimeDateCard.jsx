@@ -1,61 +1,95 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { Rnd } from "react-rnd";
 import { CalendarDays, Settings2 } from "lucide-react";
 import clsx from "clsx";
 
 export default function TimeDateCard({ isCustomizationState }) {
-  const [time, setTime] = useState("");
-  const [date, setDate] = useState("");
+  const [time, setTime] = useState(() =>
+    new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+  );
+  const [date, setDate] = useState(() =>
+    new Date().toLocaleDateString("en-GB", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+    })
+  );
   const [showControls, setShowControls] = useState(false);
 
   const [styleSettings, setStyleSettings] = useState(() => {
-    const saved = localStorage.getItem("timeDateStyle");
-    return (
-      JSON.parse(saved) || {
+    try {
+      return (
+        JSON.parse(localStorage.getItem("timeDateStyle")) || {
+          timeColor: "#ffffff",
+          dateColor: "#cccccc",
+          borderColor: "#ffffff",
+          textOutline: true,
+          bgBehindText: true,
+          fontSize: 96,
+          shadow: true,
+          backgroundBlur: 8,
+          shadowIntensity: 0.7,
+        }
+      );
+    } catch {
+      return {
         timeColor: "#ffffff",
         dateColor: "#cccccc",
-        borderColor: "#ffffff", // 🆕 Added border color
+        borderColor: "#ffffff",
         textOutline: true,
-        bgBehindText: false,
+        bgBehindText: true,
         fontSize: 96,
         shadow: true,
-      }
-    );
+        backgroundBlur: 100,
+        shadowIntensity: 0.7,
+      };
+    }
   });
 
-  const [position, setPosition] = useState(() => {
-    const saved = localStorage.getItem("timeDatePosition");
-    return saved ? JSON.parse(saved) : { x: 0, y: 0 };
-  });
+  const positionRef = useRef(
+    JSON.parse(localStorage.getItem("timeDatePosition") || '{"x":0,"y":0}')
+  );
+  const [position, setPosition] = useState(positionRef.current);
 
-  // 🕒 Time and date updater
+  // 🕒 Efficient time updater (once per minute)
   useEffect(() => {
-    const update = () => {
+    const updateTime = () => {
       const now = new Date();
-      setTime(now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }));
-      setDate(
-        now.toLocaleDateString("en-GB", {
-          weekday: "long",
-          day: "numeric",
-          month: "long",
-        })
-      );
+      const newTime = now.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+      if (newTime !== time) setTime(newTime);
+
+      const newDate = now.toLocaleDateString("en-GB", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+      });
+      if (newDate !== date) setDate(newDate);
     };
-    update();
-    const i = setInterval(update, 1000);
-    return () => clearInterval(i);
-  }, []);
+    updateTime();
+    const interval = setInterval(updateTime, 60000);
+    return () => clearInterval(interval);
+  }, [time, date]);
 
-  // 💾 Save customization persistently
-  useEffect(() => {
-    localStorage.setItem("timeDateStyle", JSON.stringify(styleSettings));
-  }, [styleSettings]);
+  // 💾 Debounced saves
+  const debounceSave = (key) => {
+    let timeout;
+    return (value) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        localStorage.setItem(key, JSON.stringify(value));
+      }, 400);
+    };
+  };
 
-  useEffect(() => {
-    localStorage.setItem("timeDatePosition", JSON.stringify(position));
-  }, [position]);
+  const saveStyle = useCallback(debounceSave("timeDateStyle"), []);
+  const savePosition = useCallback(debounceSave("timeDatePosition"), []);
 
-  // 🧠 Prevent drag when interacting with inputs
+  useEffect(() => saveStyle(styleSettings), [styleSettings, saveStyle]);
+  useEffect(() => savePosition(position), [position, savePosition]);
+
   const stopDragOnInput = (e) => e.stopPropagation();
 
   return (
@@ -69,14 +103,28 @@ export default function TimeDateCard({ isCustomizationState }) {
     >
       <div
         className={clsx(
-          "relative flex flex-col items-center justify-center select-none font-['Poppins'] drag-area", // 👈 Added class
-          styleSettings.bgBehindText ? "bg-white/5 p-4 rounded-xl backdrop-blur-md" : ""
+          "relative flex flex-col items-center justify-center select-none font-['Poppins']",
+          styleSettings.bgBehindText && "p-4 rounded-xl"
         )}
+        style={{
+          background: styleSettings.bgBehindText ? "rgba(255,255,255,0.05)" : "transparent",
+          backdropFilter: styleSettings.bgBehindText
+            ? `blur(${styleSettings.backgroundBlur}px)`
+            : "none",
+          WebkitBackdropFilter: styleSettings.bgBehindText
+            ? `blur(${styleSettings.backgroundBlur}px)`
+            : "none",
+          boxShadow: styleSettings.shadow
+            ? `0 0 ${12 * styleSettings.shadowIntensity}px rgba(255,255,255,${0.2 * styleSettings.shadowIntensity
+            })`
+            : "none",
+          transition: "all 0.3s ease",
+        }}
       >
-        {/* 🛠️ Edit icon (only when customization mode is on) */}
+        {/* ⚙️ Settings button */}
         {isCustomizationState && (
           <button
-            onClick={() => setShowControls((prev) => !prev)}
+            onClick={() => setShowControls((p) => !p)}
             className="absolute -left-10 top-2 p-2 bg-white/10 hover:bg-white/20 rounded-full transition"
           >
             <Settings2 className="w-5 h-5 text-white" />
@@ -91,7 +139,8 @@ export default function TimeDateCard({ isCustomizationState }) {
             style={{
               color: styleSettings.dateColor,
               textShadow: styleSettings.shadow
-                ? "0 0 6px rgba(255,255,255,0.6)"
+                ? `0 0 ${6 * styleSettings.shadowIntensity}px rgba(255,255,255,${0.6 * styleSettings.shadowIntensity
+                })`
                 : "none",
               WebkitTextStroke: styleSettings.textOutline
                 ? `0.5px ${styleSettings.borderColor}`
@@ -112,14 +161,15 @@ export default function TimeDateCard({ isCustomizationState }) {
               ? `1px ${styleSettings.borderColor}`
               : "0",
             textShadow: styleSettings.shadow
-              ? "0 0 10px rgba(255,255,255,0.7)"
+              ? `0 0 ${10 * styleSettings.shadowIntensity}px rgba(255,255,255,${0.7 * styleSettings.shadowIntensity
+              })`
               : "none",
           }}
         >
           {time}
         </h1>
 
-        {/* ⚙️ Customization Panel */}
+        {/* ⚙️ Customization panel */}
         {showControls && (
           <div
             className="absolute -left-[260px] top-0 bg-[#1a1a1a]/90 text-white p-4 rounded-lg w-56 space-y-3 shadow-lg backdrop-blur-xl border border-white/10"
@@ -127,41 +177,22 @@ export default function TimeDateCard({ isCustomizationState }) {
           >
             <h3 className="font-semibold text-sm mb-2">🧩 Customize Clock</h3>
 
-            {/* Time Color */}
-            <div className="flex items-center justify-between">
-              <label className="text-xs">Time Color</label>
-              <input
-                type="color"
-                value={styleSettings.timeColor}
-                onChange={(e) =>
-                  setStyleSettings({ ...styleSettings, timeColor: e.target.value })
-                }
-              />
-            </div>
-
-            {/* Date Color */}
-            <div className="flex items-center justify-between">
-              <label className="text-xs">Date Color</label>
-              <input
-                type="color"
-                value={styleSettings.dateColor}
-                onChange={(e) =>
-                  setStyleSettings({ ...styleSettings, dateColor: e.target.value })
-                }
-              />
-            </div>
-
-            {/* 🆕 Border Color */}
-            <div className="flex items-center justify-between">
-              <label className="text-xs">Border Color</label>
-              <input
-                type="color"
-                value={styleSettings.borderColor}
-                onChange={(e) =>
-                  setStyleSettings({ ...styleSettings, borderColor: e.target.value })
-                }
-              />
-            </div>
+            {[
+              ["Time Color", "timeColor", "color"],
+              ["Date Color", "dateColor", "color"],
+              ["Border Color", "borderColor", "color"],
+            ].map(([label, key, type]) => (
+              <div key={key} className="flex items-center justify-between">
+                <label className="text-xs">{label}</label>
+                <input
+                  type={type}
+                  value={styleSettings[key]}
+                  onChange={(e) =>
+                    setStyleSettings({ ...styleSettings, [key]: e.target.value })
+                  }
+                />
+              </div>
+            ))}
 
             {/* Font Size */}
             <div>
@@ -182,53 +213,70 @@ export default function TimeDateCard({ isCustomizationState }) {
               />
             </div>
 
-            {/* Toggles */}
-            <div className="flex flex-col space-y-1">
-              <label className="text-xs flex items-center justify-between">
-                Outline
-                <input
-                  type="checkbox"
-                  checked={styleSettings.textOutline}
-                  onChange={(e) =>
-                    setStyleSettings({
-                      ...styleSettings,
-                      textOutline: e.target.checked,
-                    })
-                  }
-                  onMouseDown={stopDragOnInput}
-                />
-              </label>
-
-              <label className="text-xs flex items-center justify-between">
-                Shadow
-                <input
-                  type="checkbox"
-                  checked={styleSettings.shadow}
-                  onChange={(e) =>
-                    setStyleSettings({
-                      ...styleSettings,
-                      shadow: e.target.checked,
-                    })
-                  }
-                  onMouseDown={stopDragOnInput}
-                />
-              </label>
-
-              <label className="text-xs flex items-center justify-between">
-                Background Behind Text
-                <input
-                  type="checkbox"
-                  checked={styleSettings.bgBehindText}
-                  onChange={(e) =>
-                    setStyleSettings({
-                      ...styleSettings,
-                      bgBehindText: e.target.checked,
-                    })
-                  }
-                  onMouseDown={stopDragOnInput}
-                />
-              </label>
+            {/* 🆕 Background blur intensity */}
+            <div>
+              <label className="text-xs">Backdrop Blur</label>
+              <input
+                type="range"
+                min="0"
+                max="20"
+                step="1"
+                value={styleSettings.backgroundBlur}
+                onChange={(e) =>
+                  setStyleSettings({
+                    ...styleSettings,
+                    backgroundBlur: parseInt(e.target.value),
+                  })
+                }
+                className="w-full"
+                onMouseDown={stopDragOnInput}
+              />
             </div>
+
+            {/* 🆕 Shadow intensity */}
+            <div>
+              <label className="text-xs">Shadow Intensity</label>
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.1"
+                value={styleSettings.shadowIntensity}
+                onChange={(e) =>
+                  setStyleSettings({
+                    ...styleSettings,
+                    shadowIntensity: parseFloat(e.target.value),
+                  })
+                }
+                className="w-full"
+                onMouseDown={stopDragOnInput}
+              />
+            </div>
+
+            {/* Toggles */}
+            {[
+              ["Outline", "textOutline"],
+              ["Shadow", "shadow"],
+              ["Background Behind Text", "bgBehindText"],
+            ].map(([label, key]) => (
+              <label
+                key={key}
+                className="text-xs flex items-center justify-between"
+              >
+                {label}
+                <input
+                  type="checkbox"
+                  checked={styleSettings[key]}
+                  onChange={(e) =>
+                    setStyleSettings({
+                      ...styleSettings,
+                      [key]: e.target.checked,
+                    })
+                  }
+                  onMouseDown={stopDragOnInput}
+                />
+              </label>
+            ))}
 
             {/* Reset Button */}
             <button
@@ -242,6 +290,8 @@ export default function TimeDateCard({ isCustomizationState }) {
                   bgBehindText: false,
                   fontSize: 96,
                   shadow: true,
+                  backgroundBlur: 8,
+                  shadowIntensity: 0.7,
                 });
               }}
               className="w-full bg-white/10 hover:bg-white/20 text-xs py-1 rounded-md transition mt-2"
