@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -16,6 +16,12 @@ import LockIcon from "./components/appicons/LockIcon";
 function App() {
   const [locked, setLocked] = useState(true);
   const [isCustomizationState, setIsCustomizationState] = useState(false);
+
+  useEffect(() => {
+    if (locked && isCustomizationState) {
+      setIsCustomizationState(false)
+    }
+  }, [locked])
 
   return (
     <>

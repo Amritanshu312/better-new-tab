@@ -15,7 +15,7 @@ const LockIcon = ({ locked, setLocked }) => {
   }, [setLocked]); // ✅ dependency added
 
   return (
-    <div className="absolute bottom-4 right-4 flex items-center gap-4 z-50">
+    <div className="absolute bottom-4 right-4 flex items-center gap-4 z-[999]">
       <button
         onClick={toggleLock}
         className={clsx(

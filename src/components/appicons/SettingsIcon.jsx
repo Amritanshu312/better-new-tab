@@ -11,7 +11,7 @@ const SettingsIcon = ({ locked, setIsSettingsToggled }) => {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.8, y: 20 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          className="absolute bottom-20 right-4 flex z-10"
+          className="absolute bottom-20 right-4 flex z-[999]"
         >
           <button
             className={clsx(
