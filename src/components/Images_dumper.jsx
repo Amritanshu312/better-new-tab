@@ -338,11 +338,11 @@ const Images_dumper = ({ locked, setLocked }) => {
       ))}
 
       {/* 🔒 Lock / Unlock Button */}
-      <div className="absolute bottom-4 right-4 flex items-center gap-4">
+      <div className="absolute bottom-4 right-4 flex items-center gap-4 z-50">
         <button
           onClick={toggleLock}
           className={clsx(
-            "flex h-12 z-40 w-12 items-center justify-center text-white opacity-0 hover:opacity-100 bg-[#4e4d4e2e] rounded-xl hover:bg-[#5f5f5f50] transition-all",
+            "flex h-12  w-12 items-center justify-center text-white opacity-0 hover:opacity-100 bg-[#4e4d4e2e] rounded-xl hover:bg-[#5f5f5f50] transition-all",
             {
               "opacity-100": !locked,
             }

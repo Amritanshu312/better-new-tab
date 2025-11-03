@@ -1,30 +1,43 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Rnd } from "react-rnd";
 import { useGeneralSettings } from "../context/GeneralSettings";
 
 export default function AppBars({ isCustomizationState }) {
   const { settings } = useGeneralSettings();
+  const containerRef = useRef(null);
 
-  // 🧩 Default position equivalent to `left-1/2 top-[16%] -translate-x-1/2`
-  const getDefaultPosition = () => {
-    const centerX = window.innerWidth / 2; // assuming width ~400px
-    const centerY = -window.innerHeight + 150;
+  // 🔹 Helper to calculate centered position once we know container width
+  const calculateCenter = (width = 400) => {
+    const centerX = (window.innerWidth - width) / 2;
+    const centerY = -(window.innerHeight - window.innerHeight * 0.10); // roughly top-[16%]
     return { x: centerX, y: centerY };
   };
 
   const [position, setPosition] = useState(() => {
-    // ✅ Load from localStorage immediately on mount
     const saved = localStorage.getItem("appbarPosition");
-    return saved ? JSON.parse(saved) : getDefaultPosition();
+    return saved ? JSON.parse(saved) : calculateCenter();
   });
 
-  // ✅ Keep position saved automatically when changed
+  // 🧭 After mount, measure actual width and recenter dynamically
+  useEffect(() => {
+    const element = containerRef.current;
+    if (element) {
+      const rect = element.getBoundingClientRect();
+      // Only reset position if nothing was saved before
+      const saved = localStorage.getItem("appbarPosition");
+      if (!saved) setPosition(calculateCenter(rect.width));
+    }
+  }, []);
+
+  // 💾 Auto-save position changes
   useEffect(() => {
     localStorage.setItem("appbarPosition", JSON.stringify(position));
   }, [position]);
 
   const handleReset = () => {
-    const def = getDefaultPosition();
+    const element = containerRef.current;
+    const rectWidth = element ? element.getBoundingClientRect().width : 400;
+    const def = calculateCenter(rectWidth);
     setPosition(def);
     localStorage.removeItem("appbarPosition");
   };
@@ -52,7 +65,7 @@ export default function AppBars({ isCustomizationState }) {
       disableDragging={!isCustomizationState}
       className="z-20"
     >
-      <div className="relative -translate-x-1/2 -translate-y-1/2">
+      <div ref={containerRef} className="relative">
         {settings.showAppbar && (
           <div className="flex space-x-6 bg-black/10 rounded-2xl p-4 backdrop-blur-md">
             {apps.map((app, index) => (
