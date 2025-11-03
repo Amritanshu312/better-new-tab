@@ -24,9 +24,9 @@ export default function TimeDateCard({ isCustomizationState }) {
           dateColor: "#cccccc",
           borderColor: "#ffffff",
           textOutline: true,
-          bgBehindText: true,
+          bgBehindText: false,
           fontSize: 96,
-          shadow: true,
+          shadow: false,
           backgroundBlur: 8,
           shadowIntensity: 0.7,
         }
@@ -37,9 +37,9 @@ export default function TimeDateCard({ isCustomizationState }) {
         dateColor: "#cccccc",
         borderColor: "#ffffff",
         textOutline: true,
-        bgBehindText: true,
+        bgBehindText: false,
         fontSize: 96,
-        shadow: true,
+        shadow: false,
         backgroundBlur: 100,
         shadowIntensity: 0.7,
       };
@@ -47,7 +47,9 @@ export default function TimeDateCard({ isCustomizationState }) {
   });
 
   const positionRef = useRef(
-    JSON.parse(localStorage.getItem("timeDatePosition") || '{"x":0,"y":0}')
+    JSON.parse(localStorage.getItem("timeDatePosition") || JSON.stringify(
+      { "x": (window.innerWidth - 416) / 1.03, "y": -(window.innerHeight / 1.2) }
+    ))
   );
   const [position, setPosition] = useState(positionRef.current);
 

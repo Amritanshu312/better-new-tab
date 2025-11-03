@@ -26,6 +26,10 @@
   font-display: swap;
 }
 
+html {
+  overflow: hidden;
+}
+
 @layer utilities {
   .no-scrollbar::-webkit-scrollbar {
     display: none;
