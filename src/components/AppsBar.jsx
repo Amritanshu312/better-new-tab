@@ -265,27 +265,27 @@ export default function AppBars({ isCustomizationState }) {
                 placeholder="Site Name"
                 value={newSite.name}
                 onChange={(e) => setNewSite({ ...newSite, name: e.target.value })}
-                className="p-2 rounded-md bg-white/10 border border-white/20 text-white focus:outline-none"
+                className="p-2 rounded-md bg-[#1b191955] border border-[#ffffff1c] text-white focus:outline-none"
               />
               <input
                 type="url"
-                placeholder="Site URL (https://...)"
+                placeholder="Site URL (https://youtube.com/)"
                 value={newSite.url}
                 onChange={(e) => setNewSite({ ...newSite, url: e.target.value })}
-                className="p-2 rounded-md bg-white/10 border border-white/20 text-white focus:outline-none"
+                className="p-2 rounded-md bg-[#1b191955] border border-[#ffffff1c] text-white focus:outline-none"
               />
 
               <div className="flex justify-end space-x-3 pt-2">
                 <button
                   onClick={() => setShowModal(false)}
-                  className="px-3 py-1 rounded-md bg-gray-700 hover:bg-gray-600 transition"
+                  className="px-6 py-2 text-sm bg-[#11111155] border border-[#ffffff1b] rounded-md hover:bg-[#181818] transition"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleAddSite}
                   disabled={loading}
-                  className="px-3 py-1 rounded-md bg-blue-600 hover:bg-blue-500 transition"
+                  className="px-6 py-2 text-sm bg-[#111111b3] border border-[#ffffff1b] rounded-md hover:bg-[#1818188b] transition"
                 >
                   {loading ? "Saving..." : "Save"}
                 </button>

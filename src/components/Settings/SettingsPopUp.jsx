@@ -12,7 +12,7 @@ const SettingsSidebar = ({ tabs, activeTab, setActiveTab }) => {
         <button
           key={tab}
           onClick={() => setActiveTab(tab)}
-          className={`text-left px-4 py-2 rounded-md transition-colors ${activeTab === tab
+          className={`text-left px-4 py-2 text-base rounded-md transition-colors ${activeTab === tab
             ? "bg-[#33333390] text-white"
             : "text-gray-300 hover:bg-[#2a2a2a80]"
             }`}
