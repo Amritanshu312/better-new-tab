@@ -5,7 +5,7 @@ const GeneralSection = () => {
   const { settings, toggleSetting, updateSetting, resetSettings } = useGeneralSettings();
 
   return (
-    <div className="text-white space-y-6">
+    <div className="text-white space-y-6 mb-12">
       <h2 className="text-xl font-semibold">General Settings</h2>
 
       {/* Toggle */}
@@ -128,13 +128,42 @@ const GeneralSection = () => {
       </div>
 
 
+      {/* Playback rate */}
+      <div className="space-y-2">
+        <div>
+
+          <div className="flex justify-between items-center">
+            <h3 className="text-sm font-medium">Live Wallpaper Playback Rate</h3>
+            <span className="text-sm text-gray-300">
+              {settings.playbackRate}
+            </span>
+          </div>
+          <p className="text-xs text-gray-400">Slide the Slider to change the speed of live wallpaper video.</p>
+        </div>
+
+        <input
+          type="range"
+          min="1"
+          step="0.02"
+          max="16"
+          value={settings.playbackRate}
+          onChange={(e) => updateSetting("playbackRate", Number(e.target.value))}
+          className="w-full accent-blue-600"
+        />
+      </div>
+
       {/* Slider */}
       <div className="space-y-2">
-        <div className="flex justify-between items-center">
-          <h3 className="text-sm font-medium">Wallpaper Dimming</h3>
-          <span className="text-sm text-gray-300">
-            {settings.wallpaperDimming}%
-          </span>
+        <div>
+
+          <div className="flex justify-between items-center">
+            <h3 className="text-sm font-medium">Wallpaper Dimming</h3>
+            <span className="text-sm text-gray-300">
+              {settings.wallpaperDimming}%
+            </span>
+          </div>
+          <p className="text-xs text-gray-400">Slide the Slider to change the opacity of overlay in live wallpaper.</p>
+
         </div>
         <input
           type="range"

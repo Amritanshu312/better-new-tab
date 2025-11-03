@@ -12,6 +12,7 @@ export const GeneralSettingsProvider = ({ children }) => {
     global_search: false,
     hide_lock_icon: true,
     wallpaperDimming: 32,
+    playbackRate: 2,
     theme: "dark",
     accentColor: "#3b82f6",
     autoChangeWallpaper: false,
