@@ -5,15 +5,6 @@ import clsx from "clsx";
 import { useGeneralSettings } from "../../context/GeneralSettings";
 
 export default function TimeDateCard({ isCustomizationState }) {
-  const { settings } = useGeneralSettings()
-
-  const [visible, setVisible] = useState(settings?.showTimeDate ?? false);
-
-  // ✅ React to changes in settings.showTimeDate
-  useEffect(() => {
-    setVisible(!!settings?.showTimeDate);
-  }, [settings?.showTimeDate]);
-
   const [time, setTime] = useState(() =>
     new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
   );
@@ -63,12 +54,8 @@ export default function TimeDateCard({ isCustomizationState }) {
   );
   const [position, setPosition] = useState(positionRef.current);
 
-  // 🕒 Efficient time updater (once per minute)
+  //  Efficient time updater (once per minute)
   useEffect(() => {
-    if (!visible) return;
-
-    console.log("Time updater started");
-
     const updateTime = () => {
       const now = new Date();
 
@@ -93,7 +80,7 @@ export default function TimeDateCard({ isCustomizationState }) {
       clearInterval(interval);
       console.log("Time updater stopped");
     };
-  }, [visible]);
+  }, []);
 
 
   // 💾 Debounced saves
@@ -123,7 +110,6 @@ export default function TimeDateCard({ isCustomizationState }) {
       position={position}
       onDragStop={(e, d) => setPosition({ x: d.x, y: d.y })}
       className="z-20"
-      style={{ display: visible ? "block" : "none" }}
     >
       <div
         className={clsx(

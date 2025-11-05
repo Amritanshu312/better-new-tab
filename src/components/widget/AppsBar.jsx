@@ -99,6 +99,7 @@ export default function AppBars({ isCustomizationState }) {
     return saved ? JSON.parse(saved) : calculateCenter();
   });
 
+
   const [websites, setWebsites] = useState([]);
   const [staticList, setStaticList] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -126,6 +127,7 @@ export default function AppBars({ isCustomizationState }) {
     };
     loadSites();
   }, []);
+
 
 
   /* Save drag position */
@@ -199,40 +201,39 @@ export default function AppBars({ isCustomizationState }) {
         className="z-20"
       >
         <div ref={containerRef} className="relative">
-          {settings.showAppbar && (
-            <div className="flex space-x-6 bg-black/10 rounded-2xl p-4 backdrop-blur-md">
-              {allApps.map((app, index) => (
-                <div key={index} className="flex flex-col items-center space-y-2 relative group">
-                  <a href={app.link} target="_blank" rel="noopener noreferrer" className="flex items-center flex-col">
-                    <div className="bg-[#e5e7eb50] hover:bg-[#e5e7eb69] w-max cursor-pointer p-3 rounded-2xl shadow-md transition">
-                      <img
-                        src={app.icon}
-                        alt={app.name}
-                        className="w-8 h-8 object-contain rounded-md"
-                      />
-                    </div>
-                    <p className="text-white text-sm font-medium">{app.name}</p>
-                  </a>
+          <div className="flex space-x-6 bg-black/10 rounded-2xl p-4 backdrop-blur-md">
+            {allApps.map((app, index) => (
+              <div key={index} className="flex flex-col items-center space-y-2 relative group">
+                <a href={app.link} target="_blank" rel="noopener noreferrer" className="flex items-center flex-col">
+                  <div className="bg-[#e5e7eb50] hover:bg-[#e5e7eb69] w-max cursor-pointer p-3 rounded-2xl shadow-md transition">
+                    <img
+                      src={app.icon}
+                      alt={app.name}
+                      className="w-8 h-8 object-contain rounded-md"
+                    />
+                  </div>
+                  <p className="text-white text-sm font-medium">{app.name}</p>
+                </a>
 
-                  {isCustomizationState && (
-                    <button
-                      onClick={() => handleDelete(app)}
-                      className="absolute -top-2 -right-2 bg-red-600 hover:bg-red-700 text-white text-xs rounded-full p-0.5"
-                    >
-                      <X size={14} />
-                    </button>
-                  )}
-                </div>
-              ))}
+                {isCustomizationState && (
+                  <button
+                    onClick={() => handleDelete(app)}
+                    className="absolute -top-2 -right-2 bg-red-600 hover:bg-red-700 text-white text-xs rounded-full p-0.5"
+                  >
+                    <X size={14} />
+                  </button>
+                )}
+              </div>
+            ))}
 
-              <button
-                onClick={() => setShowModal(true)}
-                className="bg-[#00000009] backdrop-blur-md hover:bg-[#0000000e] border border-[#ffffff52] h-[56px] w-[56px] rounded-2xl text-sm text-white flex items-center justify-center transition"
-              >
-                <Plus />
-              </button>
-            </div>
-          )}
+            <button
+              onClick={() => setShowModal(true)}
+              className="bg-[#00000009] backdrop-blur-md hover:bg-[#0000000e] border border-[#ffffff52] h-[56px] w-[56px] rounded-2xl text-sm text-white flex items-center justify-center transition"
+            >
+              <Plus />
+            </button>
+          </div>
+
 
           {isCustomizationState && (
             <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 flex space-x-3">

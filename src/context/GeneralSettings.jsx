@@ -7,11 +7,11 @@ export const GeneralSettingsProvider = ({ children }) => {
   const defaultSettings = {
     showBackground: true,
     showBorder: true,
-    showAppbar: true,
+    showAppbar: false,
     showTimeDate: true,
     showTodoList: false,
     global_search: false,
-    hide_lock_icon: true,
+    hide_lock_icon: false,
     wallpaperDimming: 32,
     playbackRate: 2,
     theme: "dark",

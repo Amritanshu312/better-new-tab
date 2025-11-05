@@ -11,8 +11,8 @@ const WidgetManager = ({
   const { settings } = useGeneralSettings()
   return (
     <>
-      <AppBars isCustomizationState={isCustomizationState} />
-      <TimeDateCard isCustomizationState={isCustomizationState} />
+      {settings.showAppbar ? <AppBars isCustomizationState={isCustomizationState} /> : null}
+      {settings.showTimeDate ? <TimeDateCard isCustomizationState={isCustomizationState} /> : null}
       {settings.showTodoList ? <TodoList locked={locked} /> : null}
     </>
   )

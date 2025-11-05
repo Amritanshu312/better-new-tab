@@ -27,7 +27,7 @@ const SettingsSidebar = ({ tabs, activeTab, setActiveTab }) => {
 /* ---------- Content Component ---------- */
 const SettingsContent = ({ activeTab, setIsSettingsToggled }) => {
   return (
-    <div className="flex-1 p-6 overflow-y-auto no-scrollbar">
+    <div className="flex-1 p-6 overflow-y-auto no-scrollbar relative">
       {activeTab === "Wallpaper" ? <BackgroundSections setIsSettingsToggled={setIsSettingsToggled} /> :
         activeTab === "General" ? <GeneralSection /> : null
       }

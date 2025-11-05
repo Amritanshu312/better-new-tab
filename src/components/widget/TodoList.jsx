@@ -157,7 +157,7 @@ const TodoList = ({
             placeholder="Add new task..."
             className="flex-1 bg-[#00000033] text-white px-3 py-2 rounded-lg text-sm
                    placeholder:text-gray-400 outline-none focus:ring-1 ring-[#ffffff3b] 
-                   border border-[#ffffff14]"
+                   border border-[#ffffff14] min-w-4"
           />
           <button
             onClick={addTodo}

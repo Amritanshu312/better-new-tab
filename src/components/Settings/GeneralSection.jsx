@@ -1,211 +1,151 @@
+import { useEffect, useState } from "react";
 import { useGeneralSettings } from "../../context/GeneralSettings";
 import { Switch } from "@headlessui/react";
+
+// 🎯 Reusable Toggle Component
+const SettingToggle = ({ title, description, checked, onChange }) => (
+  <div className="flex items-center justify-between p-3 rounded-xl hover:bg-[#2e2b2b59] transition">
+    <div>
+      <h3 className="text-base font-medium">{title}</h3>
+      <p className="text-sm text-gray-400">{description}</p>
+    </div>
+    <Switch
+      checked={checked}
+      onChange={onChange}
+      className={`${checked ? "bg-blue-600" : "bg-gray-600"
+        } relative inline-flex h-6 w-11 items-center rounded-full transition`}
+    >
+      <span
+        className={`${checked ? "translate-x-6" : "translate-x-1"
+          } inline-block h-4 w-4 transform rounded-full bg-white transition`}
+      />
+    </Switch>
+  </div>
+);
 
 const GeneralSection = () => {
   const { settings, toggleSetting, updateSetting, resetSettings } =
     useGeneralSettings();
 
-  return (
-    <div className="text-white space-y-6 mb-12">
-      <h2 className="text-xl font-semibold">General Settings</h2>
+  const [showRefreshPopup, setShowRefreshPopup] = useState(false);
 
-      {/* Toggle */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h3 className="text-sm font-medium">Show Dimming Background</h3>
-          <p className="text-xs text-gray-400">
-            Enable or disable To Show Dimming Background overlay in Home Screen.
-          </p>
-        </div>
-        <Switch
+  // Store initial states to detect if reverted
+  const [initialValues] = useState({
+    showAppbar: settings.showAppbar,
+    showTodoList: settings.showTodoList,
+    showTimeDate: settings.showTimeDate,
+  });
+
+  // Watch for specific setting changes and revert checks
+  useEffect(() => {
+    const changed =
+      settings.showAppbar !== initialValues.showAppbar ||
+      settings.showTodoList !== initialValues.showTodoList ||
+      settings.showTimeDate !== initialValues.showTimeDate;
+
+    setShowRefreshPopup(changed);
+  }, [
+    settings.showAppbar,
+    settings.showTodoList,
+    settings.showTimeDate,
+    initialValues,
+  ]);
+
+
+
+  return (
+    <div className="text-white space-y-8 mb-12">
+      <h2 className="text-3xl font-semibold mb-6">🧩 General Settings</h2>
+
+      {/* Toggles Section */}
+      <div className="space-y-4">
+        <SettingToggle
+          title="Dimming Background"
+          description="Show a dim overlay behind your live wallpaper."
           checked={settings.showBackground}
           onChange={() => toggleSetting("showBackground")}
-          className={`${settings.showBackground ? "bg-blue-600" : "bg-gray-600"
-            } relative inline-flex h-6 w-11 items-center rounded-full transition`}
-        >
-          <span
-            className={`${settings.showBackground ? "translate-x-6" : "translate-x-1"
-              } inline-block h-4 w-4 transform rounded-full bg-white transition`}
-          />
-        </Switch>
-      </div>
+        />
 
-      {/* Toggle Border*/}
-      <div className="flex items-center justify-between">
-        <div>
-          <h3 className="text-sm font-medium">Show Borders In Images</h3>
-          <p className="text-xs text-gray-400">
-            Enable or disable Borders In Images.
-          </p>
-        </div>
-        <Switch
+        <SettingToggle
+          title="Image Borders"
+          description="Display a subtle border around images in your UI."
           checked={settings.showBorder}
           onChange={() => toggleSetting("showBorder")}
-          className={`${settings.showBorder ? "bg-blue-600" : "bg-gray-600"
-            } relative inline-flex h-6 w-11 items-center rounded-full transition`}
-        >
-          <span
-            className={`${settings.showBorder ? "translate-x-6" : "translate-x-1"
-              } inline-block h-4 w-4 transform rounded-full bg-white transition`}
-          />
-        </Switch>
-      </div>
+        />
 
-      {/* Toggle App Bar hide or show*/}
-      <div className="flex items-center justify-between">
-        <div>
-          <h3 className="text-sm font-medium">Show App Bar</h3>
-          <p className="text-xs text-gray-400">
-            Enable or disable App Bats in Home Screen.
-          </p>
-        </div>
-        <Switch
+        <SettingToggle
+          title="Show App Bar"
+          description="Display the app bar at the home screen."
           checked={settings.showAppbar}
           onChange={() => toggleSetting("showAppbar")}
-          className={`${settings.showAppbar ? "bg-blue-600" : "bg-gray-600"
-            } relative inline-flex h-6 w-11 items-center rounded-full transition`}
-        >
-          <span
-            className={`${settings.showAppbar ? "translate-x-6" : "translate-x-1"
-              } inline-block h-4 w-4 transform rounded-full bg-white transition`}
-          />
-        </Switch>
-      </div>
+        />
 
-      {/* Toggle Global Search*/}
-      <div className="flex items-center justify-between">
-        <div>
-          <h3 className="text-sm font-medium">
-            Disable Global Search (Spotlight)
-          </h3>
-          <p className="text-xs text-gray-400">
-            Disable Global Search from Home Screen.
-          </p>
-        </div>
-        <Switch
+        <SettingToggle
+          title="Disable Global Search"
+          description="Turn off the Spotlight search feature on your home screen."
           checked={!settings.global_search}
           onChange={() => toggleSetting("global_search")}
-          className={`${!settings.global_search ? "bg-blue-600" : "bg-gray-600"
-            } relative inline-flex h-6 w-11 items-center rounded-full transition`}
-        >
-          <span
-            className={`${!settings.global_search ? "translate-x-6" : "translate-x-1"
-              } inline-block h-4 w-4 transform rounded-full bg-white transition`}
-          />
-        </Switch>
-      </div>
+        />
 
-      {/* Toggle lock icon hide or show when state is locked*/}
-      <div className="flex items-center justify-between">
-        <div>
-          <h3 className="text-sm font-medium">Show Todo List</h3>
-          <p className="text-xs text-gray-400">
-            Enable or Disable To Hide or Show Todo List.
-          </p>
-        </div>
-        <Switch
+        <SettingToggle
+          title="Show Todo List"
+          description="Enable the floating Todo List window on your home screen."
           checked={settings.showTodoList}
           onChange={() => toggleSetting("showTodoList")}
-          className={`${settings.showTodoList ? "bg-blue-600" : "bg-gray-600"
-            } relative inline-flex h-6 w-11 items-center rounded-full transition`}
-        >
-          <span
-            className={`${settings.showTodoList ? "translate-x-6" : "translate-x-1"
-              } inline-block h-4 w-4 transform rounded-full bg-white transition`}
-          />
-        </Switch>
-      </div>
+        />
 
-
-      {/* Toggle lock icon hide or show when state is locked*/}
-      <div className="flex items-center justify-between">
-        <div>
-          <h3 className="text-sm font-medium">Hide Time and Date</h3>
-          <p className="text-xs text-gray-400">
-            Enable or Disable To Hide Time And Date Card From Home Page.
-          </p>
-        </div>
-        <Switch
-          checked={!settings.showTimeDate}
+        <SettingToggle
+          title="Show Time & Date"
+          description="Remove the Time and Date card from the home screen."
+          checked={settings.showTimeDate}
           onChange={() => toggleSetting("showTimeDate")}
-          className={`${!settings.showTimeDate ? "bg-blue-600" : "bg-gray-600"
-            } relative inline-flex h-6 w-11 items-center rounded-full transition`}
-        >
-          <span
-            className={`${!settings.showTimeDate ? "translate-x-6" : "translate-x-1"
-              } inline-block h-4 w-4 transform rounded-full bg-white transition`}
-          />
-        </Switch>
-      </div>
+        />
 
-      {/* Toggle lock icon hide or show when state is locked*/}
-      <div className="flex items-center justify-between">
-        <div>
-          <h3 className="text-sm font-medium">Hide Lock Icon</h3>
-          <p className="text-xs text-gray-400">
-            Enable To Hide Lock Icon When Editing State Is Locked, Disable To
-            Show Lock Icon even when Editing State is locked.
-          </p>
-        </div>
-        <Switch
+        <SettingToggle
+          title="Hide Lock Icon"
+          description="Hide the lock icon when Locked mode is Disabled."
           checked={settings.hide_lock_icon}
           onChange={() => toggleSetting("hide_lock_icon")}
-          className={`${settings.hide_lock_icon ? "bg-blue-600" : "bg-gray-600"
-            } relative inline-flex h-6 w-11 items-center rounded-full transition`}
-        >
-          <span
-            className={`${settings.hide_lock_icon ? "translate-x-6" : "translate-x-1"
-              } inline-block h-4 w-4 transform rounded-full bg-white transition`}
-          />
-        </Switch>
+        />
       </div>
 
-      {/* Playback rate */}
-      <div className="space-y-2">
-        <div>
-          <div className="flex justify-between items-center">
-            <h3 className="text-sm font-medium">
-              Live Wallpaper Playback Rate
-            </h3>
-            <span className="text-sm text-gray-300">
-              {settings.playbackRate}
-            </span>
-          </div>
-          <p className="text-xs text-gray-400">
-            Slide the Slider to change the speed of live wallpaper video.
-          </p>
+      {/* Playback Rate Slider */}
+      <div className="space-y-3 p-3 rounded-xl hover:bg-[#2e2b2b59] transition">
+        <div className="flex justify-between items-center">
+          <h3 className="text-base font-medium">Wallpaper Playback Speed</h3>
+          <span className="text-sm text-gray-300">
+            {settings.playbackRate.toFixed(2)}x
+          </span>
         </div>
-
+        <p className="text-xs text-gray-400">
+          Adjust how fast your live wallpaper video plays.
+        </p>
         <input
           type="range"
           min="1"
+          max="6"
           step="0.02"
-          max="16"
           value={settings.playbackRate}
-          onChange={(e) =>
-            updateSetting("playbackRate", Number(e.target.value))
-          }
+          onChange={(e) => updateSetting("playbackRate", Number(e.target.value))}
           className="w-full accent-blue-600"
         />
       </div>
 
-      {/* Slider */}
-      <div className="space-y-2">
-        <div>
-          <div className="flex justify-between items-center">
-            <h3 className="text-sm font-medium">Wallpaper Dimming</h3>
-            <span className="text-sm text-gray-300">
-              {settings.wallpaperDimming}%
-            </span>
-          </div>
-          <p className="text-xs text-gray-400">
-            Slide the Slider to change the opacity of overlay in live wallpaper.
-          </p>
+      {/* Dimming Slider */}
+      <div className="space-y-3 p-3 rounded-xl hover:bg-[#2e2b2b59] transition">
+        <div className="flex justify-between items-center">
+          <h3 className="text-base font-medium">Wallpaper Dimming Level</h3>
+          <span className="text-sm text-gray-300">
+            {settings.wallpaperDimming}%
+          </span>
         </div>
+        <p className="text-xs text-gray-400">
+          Adjust the opacity of the dark overlay over your wallpaper.
+        </p>
         <input
           type="range"
           min="10"
-          max="100"
+          max="80"
           value={settings.wallpaperDimming}
           onChange={(e) =>
             updateSetting("wallpaperDimming", Number(e.target.value))
@@ -214,13 +154,21 @@ const GeneralSection = () => {
         />
       </div>
 
-      {/* Reset */}
-      <button
-        onClick={resetSettings}
-        className="mt-4 px-4 py-2 bg-red-600 rounded-lg text-sm hover:bg-red-700"
-      >
-        Reset to Default
-      </button>
+      {/* Reset Button */}
+      <div className="pt-4">
+        <button
+          onClick={resetSettings}
+          className="w-full py-2 bg-red-600 rounded-lg text-base hover:bg-red-700 transition"
+        >
+          Reset to Default
+        </button>
+      </div>
+
+
+      {showRefreshPopup && <div className="w-full h-12 bottom-12 sticky bg-[#2e2e2e] rounded-lg flex items-center px-2 justify-between">
+        <p className="text-sm text-gray-400">⚙️ You’ve enabled a setting that needs a quick refresh to apply properly.</p>
+        <button className="px-6 py-2 text-sm bg-[#242323b3] rounded-md hover:bg-[#1818188b] transition" onClick={() => window.location.reload()}>Refresh Now</button>
+      </div>}
     </div>
   );
 };
