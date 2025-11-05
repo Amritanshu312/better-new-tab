@@ -1,41 +1,55 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, memo } from "react";
 import { useVideo } from "../../context/VideoContext";
 import { toast } from "react-toastify";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
-const VideoQualityPopup = ({ selectedItem, onClose, onSelectQuality }) => {
+const VideoQualityPopup = memo(({ selectedItem, onClose, onSelectQuality }) => {
   if (!selectedItem) return null;
+
+  const handleQualitySelect = (quality) => {
+    const newImage = selectedItem?.image?.replace(
+      "364x205",
+      quality === "HD"
+        ? "1920x1080"
+        : quality === "2K"
+          ? "2560x1440"
+          : "3840x2160"
+    );
+    onSelectQuality(quality, newImage);
+  };
 
   return (
     <AnimatePresence>
       <motion.div
+        key="popup"
         className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
+        transition={{ duration: 0.18 }}
       >
         <motion.div
-          className="bg-[#1a1a1a]/90 backdrop-blur-2xl text-white px-6 py-5 rounded-2xl shadow-xl border border-white/10 w-[90%] max-w-[340px]"
-          initial={{ scale: 0.9, opacity: 0 }}
+          className="bg-[#1a1a1a]/95 text-white px-5 py-5 rounded-2xl shadow-md border border-white/10 w-[90%] max-w-[340px]"
+          initial={{ scale: 0.96, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0.9, opacity: 0 }}
-          transition={{ type: "spring", stiffness: 180, damping: 15 }}
+          exit={{ scale: 0.96, opacity: 0 }}
+          transition={{ duration: 0.2, ease: "easeOut" }}
         >
           {/* Header */}
-          <div className="flex justify-between items-center mb-5">
-            <h2 className="text-lg font-semibold">Choose Quality</h2>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-base font-semibold">Choose Quality</h2>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-200 transition"
+              className="text-gray-400 hover:text-gray-200 transition-colors"
             >
-              <X size={20} />
+              <X size={18} />
             </button>
           </div>
 
-          {/* Section 1: Live Wallpaper */}
-          <div className="mb-6">
-            <h3 className="text-sm font-medium text-gray-300 mb-3 text-center">
+          {/* Live Wallpaper */}
+          <section className="mb-5">
+            <h3 className="text-sm font-medium text-gray-300 mb-2 text-center">
               🎞️ Live Wallpaper
             </h3>
             <div className="flex justify-around">
@@ -43,51 +57,39 @@ const VideoQualityPopup = ({ selectedItem, onClose, onSelectQuality }) => {
                 <button
                   key={quality}
                   onClick={() => onSelectQuality(quality)}
-                  className="w-24 py-2 rounded-xl bg-gradient-to-b from-[#2a2a2a] to-[#1a1a1a] border border-white/10 hover:border-white/25 hover:scale-[1.05] active:scale-[0.97] transition-all text-sm font-medium"
+                  className="w-24 py-2 rounded-xl bg-[#222]/90 border border-white/10 hover:border-white/25 transition-transform duration-150 active:scale-[0.97] text-sm font-medium"
                 >
                   {quality}
                 </button>
               ))}
             </div>
-          </div>
+          </section>
 
           {/* Divider */}
-          <div className="border-t border-white/10 mb-5" />
+          <div className="border-t border-white/10 mb-4" />
 
-          {/* Section 2: Image Wallpaper */}
-          <div>
-            <h3 className="text-sm font-medium text-gray-300 mb-3 text-center">
+          {/* Image Wallpaper */}
+          <section>
+            <h3 className="text-sm font-medium text-gray-300 mb-2 text-center">
               🖼️ Wallpaper (Image Only)
             </h3>
             <div className="flex justify-around gap-2">
               {["HD", "2K", "4K"].map((quality) => (
                 <button
-                  key={quality + "-image"}
-                  onClick={() =>
-                    onSelectQuality(
-                      quality,
-                      selectedItem?.image.replace(
-                        "364x205",
-                        quality === "HD"
-                          ? "1920x1080"
-                          : quality === "2K"
-                            ? "2560x1440"
-                            : "3840x2160"
-                      )
-                    )
-                  }
-                  className="w-24 py-2 rounded-xl bg-gradient-to-b from-[#2a2a2a] to-[#1a1a1a] border border-white/10 hover:border-white/25 hover:scale-[1.05] active:scale-[0.97] transition-all text-sm font-medium"
+                  key={quality}
+                  onClick={() => handleQualitySelect(quality)}
+                  className="w-24 py-2 rounded-xl bg-[#222]/90 border border-white/10 hover:border-white/25 transition-transform duration-150 active:scale-[0.97] text-sm font-medium"
                 >
                   {quality}
                 </button>
               ))}
             </div>
-          </div>
+          </section>
 
           {/* Cancel */}
           <button
             onClick={onClose}
-            className="mt-6 block mx-auto text-gray-400 hover:text-gray-200 text-sm transition"
+            className="mt-5 block mx-auto text-gray-400 hover:text-gray-200 text-sm transition-colors"
           >
             Cancel
           </button>
@@ -95,7 +97,8 @@ const VideoQualityPopup = ({ selectedItem, onClose, onSelectQuality }) => {
       </motion.div>
     </AnimatePresence>
   );
-};
+});
+
 
 // ============================================================
 

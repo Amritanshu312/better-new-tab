@@ -16,8 +16,8 @@ const Background = () => {
 
   if (loadingMedia) {
     return (
-      <div className="w-full h-screen flex items-center justify-center bg-black text-white">
-        Loading wallpaper...
+      <div className="w-full h-screen flex items-center justify-center bg-black">
+
       </div>
     );
   }
