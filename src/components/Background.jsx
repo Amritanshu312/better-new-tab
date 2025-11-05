@@ -4,39 +4,62 @@ import { useVideo } from "../context/VideoContext";
 
 const Background = () => {
   const videoRef = useRef(null);
-  const { videoURL, loadingVideo } = useVideo();
+  const { mediaURL, mediaType, loadingMedia } = useVideo();
   const { settings } = useGeneralSettings();
 
   useEffect(() => {
-    if (videoRef.current) {
+    // Set playback rate only if media is video
+    if (mediaType === "video" && videoRef.current) {
       videoRef.current.playbackRate = settings.playbackRate || 1;
-      console.log(settings.playbackRate)
     }
-  }, [settings, videoRef, videoURL]);
+  }, [settings.playbackRate, mediaType, mediaURL]);
 
-  if (loadingVideo) {
+  if (loadingMedia) {
     return (
       <div className="w-full h-screen flex items-center justify-center bg-black text-white">
-        Loading video...
+        Loading wallpaper...
       </div>
     );
   }
 
   return (
-    <div className="relative">
-      <video
-        ref={videoRef}
-        src={videoURL || "/assets/samurai-spirit-under-the-moon.3840x2160.mp4"}
-        className="w-full h-screen object-cover fixed top-0 left-0"
-        muted
-        autoPlay
-        loop
-        preload="auto"
-      ></video>
+    <div className="relative w-full h-screen overflow-hidden">
+      {/* 🎞️ Video background */}
+      {mediaType === "video" ? (
+        <video
+          ref={videoRef}
+          src={mediaURL || "/assets/samurai-spirit-under-the-moon.3840x2160.mp4"}
+          className="w-full h-screen object-cover fixed top-0 left-0"
+          muted
+          autoPlay
+          loop
+          preload="auto"
+        ></video>
+      ) : mediaType === "image" ? (
+        /* 🖼️ Image background */
+        <img
+          src={mediaURL}
+          alt="Wallpaper"
+          className="w-full h-screen object-cover fixed top-0 left-0"
+          draggable={false}
+        />
+      ) : (
+        /* 🕹️ Default fallback video */
+        <video
+          ref={videoRef}
+          src="/assets/samurai-spirit-under-the-moon.3840x2160.mp4"
+          className="w-full h-screen object-cover fixed top-0 left-0"
+          muted
+          autoPlay
+          loop
+          preload="auto"
+        ></video>
+      )}
 
+      {/* 🌓 Dimming Overlay */}
       {settings.showBackground && (
         <div
-          className="bg-black w-full h-full fixed top-0 left-0"
+          className="bg-black w-full h-full fixed top-0 left-0 pointer-events-none"
           style={{ opacity: `${settings.wallpaperDimming}%` }}
         ></div>
       )}
