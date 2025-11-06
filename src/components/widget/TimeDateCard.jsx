@@ -49,7 +49,7 @@ export default function TimeDateCard({ isCustomizationState }) {
 
   const positionRef = useRef(
     JSON.parse(localStorage.getItem("timeDatePosition") || JSON.stringify(
-      { "x": (window.innerWidth - 416) / 1.03, "y": -(window.innerHeight / 1.2) }
+      { "x": (window.innerWidth - 429) / 2, "y": -200 }
     ))
   );
   const [position, setPosition] = useState(positionRef.current);

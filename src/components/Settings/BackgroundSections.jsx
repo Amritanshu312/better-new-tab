@@ -332,8 +332,11 @@ const BackgroundSections = ({ setIsSettingsToggled }) => {
         onSelectQuality={handleSelectQuality}
       />
 
+      <h2 className="text-3xl font-semibold mb-6">📷 Wallpapers</h2>
+
+
       {/* Search + Page Nav */}
-      <div className="w-full h-8 mb-2 flex gap-2">
+      <div className="w-full h-8 mb-6 flex gap-2">
         <input
           type="text"
           value={searchQuery}
@@ -383,7 +386,7 @@ const BackgroundSections = ({ setIsSettingsToggled }) => {
               toast.success("Stored wallpaper deleted ❌");
             }}
             disabled={loading}
-            className="p-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition"
+            className="p-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition text-base"
           >
             {loading ? "Loading..." : "Reset To Default"}
           </button>

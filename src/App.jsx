@@ -33,7 +33,7 @@ function App() {
           isCustomizationState={isCustomizationState}
         />
 
-        <Images_Pdf_dumper locked={locked} setLocked={setLocked} />
+        {/* <Images_Pdf_dumper locked={locked} setLocked={setLocked} /> */}
       </div>
 
       <ToastContainer draggable theme="dark" />

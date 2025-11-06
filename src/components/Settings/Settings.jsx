@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Maximize2, Minimize2 } from "lucide-react";
 import BackgroundSections from "./BackgroundSections";
 import GeneralSection from "./GeneralSection";
+import StudySections from "./StudySections";
 
 /* ----------------- Device Performance Detector ----------------- */
 const useIsLowEndDevice = () => {
@@ -69,6 +70,8 @@ const SettingsContent = memo(({ activeTab, setIsSettingsToggled }) => (
         <BackgroundSections setIsSettingsToggled={setIsSettingsToggled} />
       ) : activeTab === "General" ? (
         <GeneralSection />
+      ) : activeTab === "Study" ? (
+        <StudySections />
       ) : null}
     </Suspense>
   </div>
@@ -80,7 +83,7 @@ const Settings = ({ isSettingsToggled, setIsSettingsToggled }) => {
   const [activeTab, setActiveTab] = useState("General");
   const isLowEnd = useIsLowEndDevice();
 
-  const tabs = ["General", "Wallpaper"];
+  const tabs = ["General", "Wallpaper", "Study"];
 
   /* 🎬 Animations — choose based on performance */
   const motionProps = isLowEnd

@@ -82,15 +82,9 @@ export default function AppBars({ isCustomizationState }) {
   const { settings } = useGeneralSettings();
   const containerRef = useRef(null);
 
-  // const calculateCenter = (width = 606) => {
-  //   const centerX = (window.innerWidth - width) / 2;
-  //   const centerY = -(window.innerHeight - window.innerHeight * 0.1);
-  //   return { x: centerX, y: centerY };
-  // };
-
   const calculateCenter = (width = 606) => {
     const centerX = (window.innerWidth - width) / 2;
-    const centerY = -(window.innerHeight * 0.2);
+    const centerY = -(window.innerHeight - window.innerHeight * 0.1);
     return { x: centerX, y: centerY };
   };
 
