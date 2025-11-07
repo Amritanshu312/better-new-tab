@@ -1,6 +1,7 @@
 import { useGeneralSettings } from "../../context/GeneralSettings";
 import AppBars from "./AppsBar";
 import ExamWidgets from "./ExamWidget";
+import SearchBar from "./Search";
 import StudyTracker from "./StudyTracker/StudyTracker";
 import TimeDateCard from "./TimeDateCard";
 import TodoList from "./TodoList";
@@ -29,6 +30,8 @@ const WidgetManager = ({ isCustomizationState, locked }) => {
       ) : null}
 
       {settings.show_studyTracker ? <StudyTracker locked={locked} /> : null}
+      {settings.global_search ? <SearchBar /> : null}
+
     </>
   );
 };

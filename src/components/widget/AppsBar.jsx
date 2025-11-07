@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Rnd } from "react-rnd";
 import { useGeneralSettings } from "../../context/GeneralSettings";
-import SearchBar from "../Search";
 import { Plus, X } from "lucide-react";
 import { motion } from "framer-motion"
 /* 🧠 IndexedDB Helpers */
@@ -299,7 +298,6 @@ export default function AppBars({ isCustomizationState }) {
         </motion.div>
       )}
 
-      {settings.global_search ? <SearchBar /> : null}
     </>
   );
 }
