@@ -14,13 +14,14 @@ export const GeneralSettingsProvider = ({ children }) => {
     hide_lock_icon: false,
     wallpaperDimming: 32,
     playbackRate: 2,
-    
+
     // study section
     show_jeeMainJanCountdown: false,
     show_jeeMainAprilCountdown: false,
     show_JeeAdvCountdown: false,
     show_NeetAdvCountdown: false,
     show_customExamCountdown: false,
+    show_studyTracker: false,
 
     theme: "dark",
     accentColor: "#3b82f6",

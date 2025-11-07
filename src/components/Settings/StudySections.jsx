@@ -31,24 +31,17 @@ const StudySections = () => {
 
   // Store initial states to detect if reverted
   const [initialValues] = useState({
-    showAppbar: settings.showAppbar,
-    showTodoList: settings.showTodoList,
-    showTimeDate: settings.showTimeDate,
+    show_studyTracker: settings.show_studyTracker,
   });
 
   // Watch for specific setting changes and revert checks
   useEffect(() => {
     const changed =
-      settings.showAppbar !== initialValues.showAppbar ||
-      settings.showTodoList !== initialValues.showTodoList ||
-      settings.showTimeDate !== initialValues.showTimeDate;
+      settings.show_studyTracker !== initialValues.show_studyTracker
 
     setShowRefreshPopup(changed);
   }, [
-    settings.showAppbar,
-    settings.showTodoList,
-    settings.showTimeDate,
-    initialValues,
+    settings.show_studyTracker,
   ]);
 
 
@@ -88,12 +81,12 @@ const StudySections = () => {
           onChange={() => toggleSetting("show_NeetAdvCountdown")}
         />
 
-        {/* <SettingToggle
-          title="Custom Exam Countdown"
-          description="Show a widget that displays a countdown for your custom exam date."
-          checked={settings.show_customExamCountdown}
-          onChange={() => toggleSetting("show_customExamCountdown")}
-        /> */}
+        <SettingToggle
+          title="Study Tracker"
+          description="Show a widget that displays a Study Tracker Where it will give you all the revison dates using x2 revision method."
+          checked={settings.show_studyTracker}
+          onChange={() => toggleSetting("show_studyTracker")}
+        />
 
 
       </div>

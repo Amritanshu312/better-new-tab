@@ -1,4 +1,4 @@
-import CountdownWidget from "./CountdownWidget";
+import CountdownWidget from "./components/CountdownWidget";
 
 export default function ExamWidgets({ isCustomizationState, settings }) {
   return (
