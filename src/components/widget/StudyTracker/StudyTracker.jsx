@@ -141,7 +141,7 @@ export default function StudyTracker({ locked }) {
         minHeight={450}
         className="z-30"
       >
-        <div className="backdrop-blur-xl bg-[#1a1a1acc] text-white font-[Poppins] w-full h-full p-4 rounded-2xl border border-white/10 flex flex-col relative">
+        <div className="backdrop-blur-xl bg-[#1a1a1a3a] text-white font-[Poppins] w-full h-full p-4 rounded-2xl border border-white/10 flex flex-col relative ">
           <TrackerHeader
             resetAll={resetAll}
             setShowAddModal={setShowAddModal}

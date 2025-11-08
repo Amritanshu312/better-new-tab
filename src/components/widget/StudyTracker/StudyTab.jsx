@@ -52,7 +52,7 @@ export default function StudyTab({
         </button>
       </div>
 
-      <div className="flex flex-wrap gap-2 mb-2">
+      <div className="flex flex-wrap gap-2 mb-2 no-scrollbar">
         {allClasses.map((cls) => (
           <button
             key={cls}
@@ -107,26 +107,25 @@ export default function StudyTab({
       </div>
 
       {/* Chapters */}
-      <div className="overflow-y-auto flex-1 space-y-2 pr-1 scrollbar-thin scrollbar-thumb-[#444]">
+      <div className="overflow-y-auto flex-1 space-y-2 pr-1  [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#626262]">
         {filteredChapters.map((ch, i) => (
           <motion.div
             key={i}
-            whileHover={{ scale: 1.02 }}
-            className={`flex justify-between items-center p-2 text-sm border rounded-md ${ch.done ? "border-green-400 bg-[#163818]" : "border-[#333] bg-[#111]"
+            className={`flex cursor-default justify-between items-center p-2 text-sm border rounded-md ${ch.done ? "border-green-400 bg-[#163818]" : "border-[#333] bg-[#111]"
               }`}
           >
             <span>{ch.name}</span>
             {!ch.done ? (
               <button
                 onClick={() => markComplete(ch)}
-                className="px-3 py-1 bg-green-600 hover:bg-green-700 rounded-md text-xs"
+                className="px-3 py-1 bg-[#333] hover:bg-[#444] rounded-md text-xs"
               >
                 Done
               </button>
             ) : (
               <button
                 onClick={() => revertComplete(ch)}
-                className="flex items-center gap-1 px-3 py-1 bg-yellow-600 hover:bg-yellow-700 rounded-md text-xs"
+                className="flex items-center gap-1 px-3 py-1 bg-[#10488d] hover:bg-[#102b8d] rounded-md text-xs"
               >
                 <Undo2 size={12} /> Revert
               </button>

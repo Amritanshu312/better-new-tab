@@ -26,7 +26,7 @@ export default function RevisionsTab({
         </button>
       </div>
 
-      <div className="overflow-y-auto flex-1 space-y-4">
+      <div className="overflow-y-auto flex-1 space-y-4 no-scrollbar">
         <div>
           <h3 className="text-base font-semibold mb-2">📅 Today’s Revisions</h3>
           {todayRevisions.length ? (
@@ -49,7 +49,7 @@ export default function RevisionsTab({
           )}
         </div>
 
-        <div>
+        <div >
           <h3 className="text-base font-semibold mb-2">🔜 Upcoming Revisions</h3>
           {upcomingRevisions.length ? (
             upcomingRevisions.map((r, i) => (
