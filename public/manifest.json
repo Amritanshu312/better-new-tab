@@ -9,8 +9,7 @@
   },
   "permissions": [
     "storage",
-    "tabs",
-    "topSites"
+    "tabs"
   ],
   "icons": {
     "16": "ex_icon/icon16.png",
@@ -25,8 +24,5 @@
       "48": "ex_icon/icon48.png"
     },
     "default_title": "Anime New Tab"
-  },
-  "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'"
   }
 }

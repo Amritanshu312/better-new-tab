@@ -17,6 +17,7 @@ const LockIcon = ({ locked, setLocked }) => {
   return (
     <div className="absolute bottom-4 right-4 flex items-center gap-4 z-[999]">
       <button
+        id="lock-btn"
         onClick={toggleLock}
         className={clsx(
           "flex h-12 w-12 items-center justify-center text-white bg-[#4e4d4e2e] rounded-xl transition-all hover:bg-[#5f5f5f50]",

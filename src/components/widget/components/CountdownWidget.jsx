@@ -107,7 +107,7 @@ const CountdownWidget = ({
       position={position}
       onDragStop={(e, d) => setPosition({ x: d.x, y: d.y })}
       size={defaultSize}
-      className="z-30"
+      className="z-20"
     >
       <div
         className={clsx(
@@ -181,7 +181,7 @@ const CountdownWidget = ({
               >
                 {value}
               </span>
-              <span className="text-xs text-gray-400 capitalize">{key}</span>
+              <span className="text-xs text-[#dce9ff] capitalize">{key}</span>
             </div>
           ))}
         </div>

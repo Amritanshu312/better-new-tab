@@ -82,7 +82,7 @@ const TodoList = ({
       );
     }
 
-    return todos.map((todo) => (
+    return [...todos].reverse().map((todo) => (
       <div
         key={todo.id}
         className={`flex justify-between items-start bg-white/10 p-2 rounded-lg transition-all break-words ${todo.done ? "opacity-60" : ""

@@ -1,6 +1,7 @@
 import { useGeneralSettings } from "../../context/GeneralSettings";
 import AppBars from "./AppsBar";
 import ExamWidgets from "./ExamWidget";
+import FlowTimeCard from "./FlowTime/FlowTime";
 import SearchBar from "./Search";
 import StudyTracker from "./StudyTracker/StudyTracker";
 import TimeDateCard from "./TimeDateCard";
@@ -31,7 +32,7 @@ const WidgetManager = ({ isCustomizationState, locked }) => {
 
       {settings.show_studyTracker ? <StudyTracker locked={locked} /> : null}
       {settings.global_search ? <SearchBar /> : null}
-
+      {/* <FlowTimeCard /> */}
     </>
   );
 };

@@ -10,7 +10,7 @@ import ManageSubjectsModal from "./ManageSubjectsModal";
 import syllabus from "./syllabus";
 
 export default function StudyTracker({ locked }) {
-  const defaultSize = { width: 480, height: 620 };
+  const defaultSize = { width: 350, height: 450 };
   const calculateCenter = () => ({ x: window.innerWidth / 1.32, y: -window.innerHeight / 1.8 });
   const [position, setPosition] = useState(() => JSON.parse(localStorage.getItem("studyTrackerPosition")) || calculateCenter());
   const [size, setSize] = useState(() => JSON.parse(localStorage.getItem("studyTrackerSize")) || defaultSize);
@@ -18,11 +18,19 @@ export default function StudyTracker({ locked }) {
   const [selectedClass, setSelectedClass] = useState(localStorage.getItem("selectedClass") || "JEE");
   const [selectedSubject, setSelectedSubject] = useState(localStorage.getItem("selectedSubject") || "Physics");
   const [filter, setFilter] = useState("All");
-  const [viewTab, setViewTab] = useState("Study");
+  const [viewTab, setViewTab] = useState(localStorage.getItem("studyTracker_tab") || "Study");
   const [todayRevisions, setTodayRevisions] = useState([]);
   const [upcomingRevisions, setUpcomingRevisions] = useState([]);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showManageModal, setShowManageModal] = useState(false);
+
+  // 🧩 Load Tab From Local Storage
+  useEffect(() => {
+    let latest = localStorage.getItem("studyTracker_tab") || "Study"
+    if (latest !== viewTab) {
+      localStorage.setItem("studyTracker_tab", viewTab)
+    }
+  }, [viewTab])
 
   // 🧩 Load syllabus into DB
   useEffect(() => {
@@ -137,8 +145,9 @@ export default function StudyTracker({ locked }) {
         bounds="window"
         disableDragging={!!locked}
         enableResizing={!locked}
+
         minWidth={350}
-        minHeight={450}
+        minHeight={430}
         className="z-30"
       >
         <div className="backdrop-blur-xl bg-[#1a1a1a3a] text-white font-[Poppins] w-full h-full p-4 rounded-2xl border border-white/10 flex flex-col relative ">

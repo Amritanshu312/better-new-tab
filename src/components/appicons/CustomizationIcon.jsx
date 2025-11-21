@@ -52,6 +52,7 @@ const CustomizationIcon = ({ locked, isCustomizationState, setIsCustomizationSta
                 "bg-[#4e4d4e]": isCustomizationState
               }
             )}
+            id="customize-btn"
             onClick={() => setIsCustomizationState(prev => !prev)}
           >
             <Move size={18} />

@@ -1,0 +1,54 @@
+/* ================================ */
+/* 🔥 POPOVER CONTAINER            */
+/* ================================ */
+
+.driver-popover {
+  background: #1c1b1bc4 !important;
+  border: 1px solid #2a2a2a9e !important;
+  font-family: "Poppins" !important;
+  border-radius: 14px !important;
+}
+
+/* ================================ */
+/* 🔥 TITLE                        */
+/* ================================ */
+
+.driver-popover-title {
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  margin-bottom: 8px !important;
+  color: #ffffff !important;
+}
+
+/* ================================ */
+/* 🔥 DESCRIPTION TEXT             */
+/* ================================ */
+
+.driver-popover-description {
+  font-size: 15px !important;
+  opacity: 0.85 !important;
+  color: #e0e0e0 !important;
+  line-height: 1.45 !important;
+}
+
+/* ================================ */
+/* 🔥 PRIMARY BUTTON (Next)        */
+/* ================================ */
+
+.driver-popover-footer button {
+  padding: 2px 10px !important;
+  background-color: #fff !important;
+  cursor: pointer !important;
+  outline: 0 !important;
+  border: 1px solid #ccc !important;
+  border-radius: 8px !important;
+  font-size: 13px !important;
+  color: black !important;
+}
+
+.driver-popover-footer .driver-popover-next-btn {
+  background: #5f3f97 !important; /* Purple accent */
+  border: none !important;
+  color: #ffffff !important;
+  text-shadow: none !important;
+}

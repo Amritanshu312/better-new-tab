@@ -17,6 +17,7 @@ const SettingsIcon = ({ locked, setIsSettingsToggled }) => {
             className={clsx(
               "flex h-12 w-12 items-center justify-center text-white bg-[#4e4d4e2e] rounded-xl hover:bg-[#5f5f5f50] transition-all"
             )}
+            id="setting-btn"
             onClick={() => setIsSettingsToggled(prev => !prev)}
           >
             <Settings size={18} />

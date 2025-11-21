@@ -50,6 +50,7 @@ const SettingsSidebar = memo(({ tabs, activeTab, setActiveTab, isLowEnd }) => (
     {tabs.map((tab) => (
       <button
         key={tab}
+        id={`${tab}-btn`}
         onClick={() => setActiveTab(tab)}
         className={`text-left px-4 py-2 text-base rounded-md transition-colors ${activeTab === tab
           ? "bg-[#33333390] text-white"

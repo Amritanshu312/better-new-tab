@@ -7,13 +7,13 @@ export const GeneralSettingsProvider = ({ children }) => {
   const defaultSettings = {
     showBackground: true,
     showBorder: true,
-    showAppbar: false,
+    showAppbar: true,
     showTimeDate: true,
     showTodoList: false,
-    global_search: false,
+    global_search: true,
     hide_lock_icon: false,
     wallpaperDimming: 32,
-    playbackRate: 2,
+    playbackRate: 1.5,
 
     // study section
     show_jeeMainJanCountdown: false,
@@ -23,9 +23,6 @@ export const GeneralSettingsProvider = ({ children }) => {
     show_customExamCountdown: false,
     show_studyTracker: false,
 
-    theme: "dark",
-    accentColor: "#3b82f6",
-    autoChangeWallpaper: false,
   };
 
   // ⚙️ Initialize from localStorage

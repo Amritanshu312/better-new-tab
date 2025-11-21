@@ -22,7 +22,6 @@ export default function ManageSubjectsModal({ setShowManageModal, chapters, setC
   };
 
   const deleteChapter = async (id) => {
-    if (!window.confirm("Delete this chapter?")) return;
     await deleteFromDB(id);
     setChapters(await getAllFromDB());
   };

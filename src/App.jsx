@@ -10,9 +10,15 @@ import Images_Pdf_dumper from "./components/Images_Pdf_dumper";
 import WidgetManager from "./components/widget/WidgetManager";
 import AppIconManager from "./components/appicons/AppIconManager";
 
+// 📷 Welcome Guide
+import useOnboardingTour from "./hooks/useOnboardingTour";
+
+
 function App() {
   const [locked, setLocked] = useState(true);
   const [isCustomizationState, setIsCustomizationState] = useState(false);
+
+  useOnboardingTour()
 
   useEffect(() => {
     if (locked && isCustomizationState) {
